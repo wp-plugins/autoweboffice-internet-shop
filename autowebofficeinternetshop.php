@@ -983,12 +983,17 @@ if (!class_exists('AutowebofficeInternetShop'))
 			$awo_goods = $wpdb->get_results("SELECT * 
 											FROM `".$this->tbl_awo_goods."` 
 											WHERE deleted=0 
-												AND not_sold=0 ".$where." 
+												AND not_sold=0 
+												AND awo_not_show=0 ".$where." 
 											ORDER BY  `goods` ASC  
 											LIMIT ".$limit_start." , ".$awo_catalog_goods_per_page."");	
 
 			// Получаем данные по количеству товаров
-			$awo_goods_count = $wpdb->get_results("SELECT COUNT(*) AS goods_count FROM `".$this->tbl_awo_goods."` WHERE deleted=0 AND not_sold=0 ".$where."");
+			$awo_goods_count = $wpdb->get_results("SELECT COUNT(*) AS goods_count 
+													FROM `".$this->tbl_awo_goods."` 
+													WHERE deleted=0 
+														AND not_sold=0 
+														AND awo_not_show=0 ".$where."");
 			$goods_count = $awo_goods_count['0']->goods_count;			
 			
 			$html_catalog = '';
