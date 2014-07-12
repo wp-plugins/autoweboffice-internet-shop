@@ -47,7 +47,7 @@ foreach ($awo_goods as $key => $goods)
 			{
 				$html_catalog .= '<a href="'.$url_page.'" title="Узнать подробней о '.$goods_name.'">';
 			}
-			$html_catalog .= '<img style="vertical-align: top; height: 150px; width: 100%; max-width: 148px;" src="https://'.$awo_storesId.'.autokassir.ru/images/goods/pics/'.$image.'" alt="'.$goods_name.'" title="'.$goods_name.'">';
+			$html_catalog .= '<img style="vertical-align: top; height: 148px; max-width: 148px;" src="https://'.$awo_storesId.'.autokassir.ru/images/goods/pics/'.$image.'" alt="'.$goods_name.'" title="'.$goods_name.'">';
 			if(trim($url_page) != '')
 			{
 				$html_catalog .= '</a>';

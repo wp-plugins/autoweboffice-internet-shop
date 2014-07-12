@@ -4,7 +4,7 @@
  * Plugin Name: AutoWebOffice Internet Shop
  * Plugin URI: http://wordpress.org/plugins/autoweboffice-internet-shop/
  * Description: Создание интернет магазина на базе платформы WordPress интегрированного с сервисом АвтоОфис
- * Version: 0.1
+ * Version: 0.2
  * Author: Alexander Kruglov (zakaz@autoweboffice.com)
  * Author URI: http://autoweboffice.com/
  */
@@ -423,9 +423,10 @@ if (!class_exists('AutowebofficeInternetShop'))
 			{
 				default:
 					// Подключаем страницу с отображением списка товаров
-					include_once('admin/goods.php');						
+					include_once('admin/internet-shop/goods.php');						
 					break;
 			}
+				 
 		}
 		
 		/**
@@ -1047,7 +1048,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 			$args = array(
 				'base' 			=> str_replace($big, '%#%', get_pagenum_link($big)),
 				'format' 		=> '',
-				'current' 		=> max(1, get_query_var('paged')),
+				'current' 		=> max(1, $_GET['paged']),
 				'show_all'     	=> false,
 				'end_size'     	=> 3,
 				'mid_size'     	=> 3,
@@ -1439,40 +1440,40 @@ if (!class_exists('AutowebofficeInternetShop'))
 			$sql_tbl_awo_goods = "
 					CREATE TABLE `".$this->tbl_awo_goods."` (
 						`id_goods` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Код товара',
-						`marking` varchar(255) NOT NULL COMMENT 'Артикул товара',
-						`in_affiliate` tinyint(4) NOT NULL DEFAULT '1' COMMENT 'Участвует в партнерке',
-						`show_in_affiliate` tinyint(4) NOT NULL DEFAULT '1' COMMENT 'Показывать в аккаунте партнера',
-						`goods` varchar(255) DEFAULT NULL COMMENT 'Название товара',
-						`variants_name` varchar(255) NOT NULL COMMENT 'Варианты названий',
-						`image` varchar(255) DEFAULT NULL COMMENT 'Основное изображение',
-						`url_external_image` varchar(255) NOT NULL COMMENT 'URL внешней картинки',
-						`url_external_image_used` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Использовать внешнюю картинку',
-						`brief_description` text COMMENT 'Краткое описание товара',
-						`price` decimal(10,2) DEFAULT '0.00' COMMENT 'Цена товара',
-						`price_purchase` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT 'Цена закупки',
-						`url_page` varchar(255) NOT NULL,
-						`not_sold` tinyint(4) DEFAULT '0' COMMENT 'Товар не продается',
-						`new_of_sales` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Новинка продаж',
-						`hit_of_sales` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Хит продаж',
-						`special_offer` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Специальное предложение',
-						`id_goods_kind` int(11) NOT NULL COMMENT 'Код вида товара',
-						`deleted` tinyint(4) DEFAULT '0' COMMENT 'Товар удален',
-						`creation_date` datetime NOT NULL COMMENT 'Дата создания товара',
-						`order_fields` text NOT NULL COMMENT 'Настройки выводимых полей при заказе товара',
-						`information_single_order` longtext NOT NULL COMMENT 'Информация для оправки клиенту в одиночном заказе',
-						`information_cart_order` text NOT NULL COMMENT 'Информация для отправки клиенту в карзинном заказа',
-						`additional_order_fields` text NOT NULL,
-						`rest_in_stock` int(11) NOT NULL DEFAULT '0' COMMENT 'Остаток товара на складе',
-						`id_supplier` int(11) NOT NULL DEFAULT '0' COMMENT 'Код поставщика',
-						`id_manufacturer` int(11) NOT NULL DEFAULT '0' COMMENT 'Код производителя',
-						`id_employee_created` int(11) NOT NULL COMMENT 'Код сотрудника, создавшего товар',
-						`id_employee_deleted` int(11) NOT NULL COMMENT 'Код сотрудника, удалившего товар',
-						`deleted_date` datetime NOT NULL COMMENT 'Дата удаления',
-						`information_for_personal` longtext NOT NULL COMMENT 'Информация для личного кабинета',
-						`show_license_agreement` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Запрашивать лицензионное соглашение',
-						`partner_program_levels_used` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Использовать свои условия партнерской программы',
-						`partner_program_levels` text NOT NULL COMMENT 'Свои условия партнерской программы',
-						`awo_description` longtext NOT NULL COMMENT 'Полное описание товара',
+							`marking` varchar(255) NOT NULL COMMENT 'Артикул товара',
+							`in_affiliate` tinyint(4) NOT NULL DEFAULT '1' COMMENT 'Участвует в партнерке',
+							`show_in_affiliate` tinyint(4) NOT NULL DEFAULT '1' COMMENT 'Показывать в аккаунте партнера',
+							`goods` varchar(255) DEFAULT NULL COMMENT 'Название товара',
+							`variants_name` varchar(255) NOT NULL COMMENT 'Варианты названий',
+							`image` varchar(255) DEFAULT NULL COMMENT 'Основное изображение',
+							`url_external_image` varchar(255) NOT NULL COMMENT 'URL внешней картинки',
+							`url_external_image_used` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Использовать внешнюю картинку',
+							`brief_description` text COMMENT 'Краткое описание товара',
+							`price` decimal(10,2) DEFAULT '0.00' COMMENT 'Цена товара',
+							`price_purchase` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT 'Цена закупки',
+							`url_page` varchar(255) NOT NULL,
+							`not_sold` tinyint(4) DEFAULT '0' COMMENT 'Товар не продается',
+							`new_of_sales` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Новинка продаж',
+							`hit_of_sales` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Хит продаж',
+							`id_goods_kind` int(11) NOT NULL COMMENT 'Код вида товара',
+							`deleted` tinyint(4) DEFAULT '0' COMMENT 'Товар удален',
+							`creation_date` datetime NOT NULL COMMENT 'Дата создания товара',
+							`order_fields` text NOT NULL COMMENT 'Настройки выводимых полей при заказе товара',
+							`information_single_order` longtext NOT NULL COMMENT 'Информация для оправки клиенту в одиночном заказе',
+							`information_cart_order` text NOT NULL COMMENT 'Информация для отправки клиенту в карзинном заказа',
+							`additional_order_fields` text NOT NULL,
+							`rest_in_stock` int(11) NOT NULL DEFAULT '0' COMMENT 'Остаток товара на складе',
+							`id_supplier` int(11) NOT NULL DEFAULT '0' COMMENT 'Код поставщика',
+							`id_manufacturer` int(11) NOT NULL DEFAULT '0' COMMENT 'Код производителя',
+							`id_employee_created` int(11) NOT NULL COMMENT 'Код сотрудника, создавшего товар',
+							`id_employee_deleted` int(11) NOT NULL COMMENT 'Код сотрудника, удалившего товар',
+							`deleted_date` datetime NOT NULL COMMENT 'Дата удаления',
+							`information_for_personal` longtext NOT NULL COMMENT 'Информация для личного кабинета',
+							`show_license_agreement` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Запрашивать лицензионное соглашение',
+							`partner_program_levels_used` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Использовать свои условия партнерской программы',
+							`partner_program_levels` text NOT NULL COMMENT 'Свои условия партнерской программы',
+							`awo_description` longtext NOT NULL COMMENT 'Полное описание товара',
+							`awo_not_show` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Не показывать в каталоге',
 						PRIMARY KEY (`id_goods`),
 						KEY `goods` (`goods`),
 						KEY `id_supplier` (`id_supplier`),
