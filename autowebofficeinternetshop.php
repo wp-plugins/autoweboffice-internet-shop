@@ -4,7 +4,7 @@
  * Plugin Name: AutoWebOffice Internet Shop
  * Plugin URI: http://wordpress.org/plugins/autoweboffice-internet-shop/
  * Description: Создание интернет магазина на базе платформы WordPress интегрированного с сервисом АвтоОфис
- * Version: 0.2
+ * Version: 0.3
  * Author: Alexander Kruglov (zakaz@autoweboffice.com)
  * Author URI: http://autoweboffice.com/
  */
@@ -461,6 +461,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 			// Если подключена библиотека cURL
 			if($curl = curl_init()) 
 			{
+
 				// Массив с GET параметрами запроса
 				$array_query = array(
 								// API KEY
@@ -500,6 +501,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 				// Цикл по массиву с товарами
 				foreach($out_obj as $key => $obj)
 				{
+
 					// Проверяем существует ли данный товар у наз в БД
 					$awo_goods = $wpdb->get_row("SELECT id_goods FROM `".$this->tbl_awo_goods."` WHERE id_goods = ".$obj->id_goods);
 					
@@ -533,7 +535,6 @@ if (!class_exists('AutowebofficeInternetShop'))
 						$insertData['awo_description'] = $awo_description; // Шаблон для страницы описания товара
 						
 						$wpdb->insert($this->tbl_awo_goods, $insertData, $formatData);
-
 					}
 				}
 			}
@@ -1460,6 +1461,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 							`not_sold` tinyint(4) DEFAULT '0' COMMENT 'Товар не продается',
 							`new_of_sales` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Новинка продаж',
 							`hit_of_sales` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Хит продаж',
+							`special_offer` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Специальное предложение',
 							`id_goods_kind` int(11) NOT NULL COMMENT 'Код вида товара',
 							`deleted` tinyint(4) DEFAULT '0' COMMENT 'Товар удален',
 							`creation_date` datetime NOT NULL COMMENT 'Дата создания товара',

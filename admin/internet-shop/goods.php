@@ -24,7 +24,7 @@ switch ($_GET['action'])
 						'awo_not_show' => $awo_not_show,
 			);
 			
-			// Обновляем данные по настройкам подключения к API
+			// Обновляем данные по Товарам
 			$wpdb->update($this->tbl_awo_goods, $updateData, array('id_goods' => (int)$_GET['id']));
 		}
 		
