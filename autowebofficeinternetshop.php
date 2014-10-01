@@ -4,7 +4,7 @@
  * Plugin Name: AutoWebOffice Internet Shop
  * Plugin URI: http://wordpress.org/plugins/autoweboffice-internet-shop/
  * Description: Создание интернет магазина на базе платформы WordPress интегрированного с сервисом АвтоОфис
- * Version: 0.3
+ * Version: 0.4
  * Author: Alexander Kruglov (zakaz@autoweboffice.com)
  * Author URI: http://autoweboffice.com/
  */
@@ -101,22 +101,20 @@ if (!class_exists('AutowebofficeInternetShop'))
 				add_shortcode('awo_link_to_single_order', array (&$this, 'get_link_to_single_order')); // Кнопка Заказать прямо сейчас
 				add_shortcode('awo_cart_info_shot', array (&$this, 'get_cart_info_shot')); // Вывод краткой информации по товарам лежащим в Корзине заказа
 				add_shortcode('awo_subscribe_form', array (&$this, 'get_subscribe_form')); // Вывод формы подписки на рассылку проекта
-				add_shortcode('awo_catalog_of_goods', array (&$this, 'get_catalog_of_goods')); // Вывод каталога товаров
-				
+				add_shortcode('awo_catalog_of_goods', array (&$this, 'get_catalog_of_goods')); // Вывод каталога товаров			
+			
 			}
-			
-			
 			
 		}
 		
-	/**
-	 * Подключаем вспомогательные виджеты
-	 */
-	public function include_widgets() 
-	{
-		// Вывод блока с произвольным текстом
-		include_once( 'includes/widgets/AWO_Widget_Text.php' );
-	}
+		/**
+		 * Подключаем вспомогательные виджеты
+		 */
+		public function include_widgets() 
+		{
+			// Вывод блока с произвольным текстом
+			include_once( 'includes/widgets/AWO_Widget_Text.php' );
+		}
 		
 		/**
 		 * Функция включение Сессий
@@ -153,14 +151,16 @@ if (!class_exists('AutowebofficeInternetShop'))
 		 */
 		function site_load_scripts()
 		{	
+			?>
+			<script type='text/javascript'>
+				var awo_wp_admin_url = "<?php echo WP_ADMIN_URL;?>";
+			</script>
+			<?php
 			// Регистрируем скрипты
 			wp_register_script('awo_add_to_cart',$this->plugin_url.'js/awo_add_to_cart.js');
 			
-			
 			// Добавляем скрипты на страницу
 			wp_enqueue_script('awo_add_to_cart');
-			 
-
 		}
 
 		/**

@@ -8,7 +8,7 @@ jQuery(document).ready(function($) {
 				id_goods: $(this).attr("id")
 			};
 
-			jQuery.post('wp-admin/admin-ajax.php', data, function(response) {
+			jQuery.post(awo_wp_admin_url+'/admin-ajax.php', data, function(response) {
 				$(".awo_cart").html(response);
 				
 				var data = {
@@ -17,7 +17,7 @@ jQuery(document).ready(function($) {
 				};
 				
 				// Получение текста сообщения
-				jQuery.post('wp-admin/admin-ajax.php', data, function(response) {
+				jQuery.post(awo_wp_admin_url+'/admin-ajax.php', data, function(response) {
 					$(".awo_show_message").html(response);
 				});
 				
@@ -37,7 +37,7 @@ jQuery(document).ready(function($) {
 			};
 			
 			// Получение текста сообщения
-			jQuery.post('wp-admin/admin-ajax.php', data, function(response) {
+			jQuery.post(awo_wp_admin_url+'/admin-ajax.php', data, function(response) {
 				$(".awo_show_message").html(response);
 			});
 			
@@ -45,7 +45,7 @@ jQuery(document).ready(function($) {
 				action: 'ajax_add_goods_to_order'
 			};
 
-			jQuery.post('wp-admin/admin-ajax.php', data, function(response) {
+			jQuery.post(awo_wp_admin_url+'/admin-ajax.php', data, function(response) {
 				$(".awo_cart").html(response);
 			});
 			
@@ -60,7 +60,7 @@ jQuery(document).ready(function($) {
 			};
 			
 			// Получение текста сообщения
-			jQuery.post('wp-admin/admin-ajax.php', data, function(response) {
+			jQuery.post(awo_wp_admin_url+'/admin-ajax.php', data, function(response) {
 				$(".awo_show_cart_message").html(response);
 			});
 			
@@ -88,7 +88,7 @@ jQuery(document).ready(function($) {
 			};
 			
 			jQuery.ajax({
-				url: 'wp-admin/admin-ajax.php',
+				url: awo_wp_admin_url+'/admin-ajax.php',
 				type: 'POST',
 				data: data,
 				// we set the context to the form so that inside
