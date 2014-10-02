@@ -59,7 +59,18 @@ foreach ($awo_goods as $key => $goods)
 			{
 				$html_catalog .= '<a href="'.$url_page.'" title="Узнать подробней о '.$goods_name.'">';
 			}
-			$html_catalog .= '<img style="vertical-align: top; height: 148px; max-width: 148px;" src="https://'.$awo_storesId.'.autokassir.ru/images/goods/pics/'.$image.'" alt="'.$goods_name.'" title="'.$goods_name.'">';
+			
+			// Если есть данные по изображению товара
+			if(trim($image) != '')
+			{
+				$image_url = 'https://'.$awo_storesId.'.autokassir.ru/images/goods/pics/'.$image;
+			}
+			else
+			{
+				$image_url = '/wp-content/plugins/autoweboffice-internet-shop/img/cap/goods.png';
+			}
+			
+			$html_catalog .= '<img style="vertical-align: top; height: 148px; max-width: 148px;" src="'.$image_url.'" alt="'.$goods_name.'" title="'.$goods_name.'">';
 			if(trim($url_page) != '')
 			{
 				$html_catalog .= '</a>';
