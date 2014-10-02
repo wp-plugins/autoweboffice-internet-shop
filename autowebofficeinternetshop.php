@@ -4,7 +4,7 @@
  * Plugin Name: AutoWebOffice Internet Shop
  * Plugin URI: http://wordpress.org/plugins/autoweboffice-internet-shop/
  * Description: Создание интернет магазина на базе платформы WordPress интегрированного с сервисом АвтоОфис
- * Version: 0.5
+ * Version: 0.6
  * Author: Alexander Kruglov (zakaz@autoweboffice.com)
  * Author URI: http://autoweboffice.com/
  */
@@ -151,7 +151,9 @@ if (!class_exists('AutowebofficeInternetShop'))
 		 */
 		function site_load_scripts()
 		{	
-			$WP_ADMIN_URL = str_replace ('/wp-content', '/wp-admin', WP_CONTENT_URL);
+			// $WP_ADMIN_URL = str_replace ('/wp-content', '/wp-admin', WP_CONTENT_URL);
+			
+			$WP_ADMIN_URL = admin_url();
 			
 			?>
 			<script type='text/javascript'>

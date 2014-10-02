@@ -39,6 +39,9 @@ foreach ($awo_goods as $key => $goods)
 			// Если не получен код товара
 			if($id_goods == 0)
 			{
+				$html_catalog .= '<td style="padding:5px; width: 153px;">';
+				$html_catalog .= '&nbsp;';
+				$html_catalog .= '</td>';
 				continue;
 			}
 			
@@ -74,6 +77,9 @@ foreach ($awo_goods as $key => $goods)
 			// Если не получен код товара
 			if($id_goods == 0)
 			{
+				$html_catalog .= '<td style="padding:5px; width: 153px;">';
+				$html_catalog .= '&nbsp;';
+				$html_catalog .= '</td>';
 				continue;
 			}
 		
@@ -107,6 +113,9 @@ foreach ($awo_goods as $key => $goods)
 			// Если не получен код товара
 			if($id_goods == 0)
 			{
+				$html_catalog .= '<td style="padding:5px; width: 153px;">';
+				$html_catalog .= '&nbsp;';
+				$html_catalog .= '</td>';
 				continue;
 			}
 		
