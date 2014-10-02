@@ -26,15 +26,23 @@ foreach ($awo_goods as $key => $goods)
 	$mass_goods[$g] = $goods;
 	
 	// Если накопили данные по трем товарам
-	if($g == 3)
+	if($g == 3 OR count($awo_goods) < 3)
 	{
 		$html_catalog .= '<tr>';
 		
 		for ($n = 1; $n <= 3; $n++) 
 		{
 			// Вормируем название товара для печати на экран
+			$id_goods = (int)$mass_goods[$n]->id_goods;
+			
+			// Если не получен код товара
+			if($id_goods == 0)
+			{
+				continue;
+			}
+			
 			$goods_name = htmlspecialchars(trim($mass_goods[$n]->goods));
-			$id_goods = $mass_goods[$n]->id_goods;
+			
 			$url_page = $mass_goods[$n]->url_page;
 			$image = $mass_goods[$n]->image;
 			
@@ -61,8 +69,16 @@ foreach ($awo_goods as $key => $goods)
 		
 		for ($n = 1; $n <= 3; $n++) 
 		{
-			$goods_name = htmlspecialchars(trim($mass_goods[$n]->goods));
 			$id_goods = $mass_goods[$n]->id_goods;
+			
+			// Если не получен код товара
+			if($id_goods == 0)
+			{
+				continue;
+			}
+			
+			$goods_name = htmlspecialchars(trim($mass_goods[$n]->goods));
+			
 			$url_page = $mass_goods[$n]->url_page;
 			
 			$goods_url = '/?page_id='.get_query_var('page_id').'&paged='.get_query_var('paged').'&id_goods='.$id_goods;
@@ -87,8 +103,14 @@ foreach ($awo_goods as $key => $goods)
 		
 		for ($n = 1; $n <= 3; $n++) 
 		{
-			$price = $mass_goods[$n]->price;
 			$id_goods = $mass_goods[$n]->id_goods;
+			
+			// Если не получен код товара
+			if($id_goods == 0)
+			{
+				continue;
+			}
+			$price = $mass_goods[$n]->price;
 			
 			$html_catalog .= '<td style="padding:5px; width: 205px;">';
 			$html_catalog .= '<div style="width: 100%; height: 40px; line-height: 40px; overflow: hidden; display: block; border: 1px dashed #d2d0cb; text-align: center; font-size: 17px; border-radius: 5px; margin-bottom: 15px;}">'.$price.'</div>';
