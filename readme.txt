@@ -34,6 +34,7 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 * PHP 5.1 или выше
 * WordPress 3.9.1 или выше
+* Устанвленная на хостинге библиотека CURL
 
 == Frequently Asked Questions ==
 
@@ -66,6 +67,11 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 4. Приме старницы с отображением списка реализуемых товаров в административной части WordPress
 
 == Changelog ==
+
+= 0.7 =
+
+* Добавлены заглушки для товаров без изображения
+* FIX: Исправлен БАГ с настройкой палей формы подписки на рассылку
 
 = 0.6 =
 

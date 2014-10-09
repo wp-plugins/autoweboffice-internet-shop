@@ -4,7 +4,7 @@
  * Plugin Name: AutoWebOffice Internet Shop
  * Plugin URI: http://wordpress.org/plugins/autoweboffice-internet-shop/
  * Description: Создание интернет магазина на базе платформы WordPress интегрированного с сервисом АвтоОфис
- * Version: 0.6
+ * Version: 0.7
  * Author: Alexander Kruglov (zakaz@autoweboffice.com)
  * Author URI: http://autoweboffice.com/
  */
@@ -191,7 +191,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 			add_submenu_page('awo-internet-shop', 'Справка по работе с плагином Каталог товаров', 'Справка', 'edit_posts', 'awo-help', array(&$this,'admin_help'));
 		
 			// Добавляем дополнительный раздел
-			add_submenu_page('awo-internet-shop', 'API', 'API', 'manage_options', 'awo-api', array(&$this,'admin_options_api'));
+			add_submenu_page('awo-internet-shop', 'API', 'API', 'edit_posts', 'awo-api', array(&$this,'admin_options_api'));
 		}
 		
 		/**
@@ -221,7 +221,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 					case 'save_subscribe_form_settings':
 						// Сохраняем переданные настройки отображения формы подписки на рассылку
 						$result_update_api_settings = $this->admin_update_subscribe_form_settings($_POST['awo_id_newsletter'], $_POST['awo_id_advertising_channel_page'], $_POST['awo_last_name'], 
-															  $_POST['awo_name'], $_POST['awo_email'], $_POST['awo_middle_name'], $_POST['awo_email'],
+															  $_POST['awo_name'], 1, $_POST['awo_middle_name'],
 															  $_POST['awo_phone_number'], $_POST['awo_policy_of_confidentiality'], $_POST['awo_subscribe_form_submit_value']);
 						
 						break; 
@@ -612,7 +612,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 		 * $subscribe_form_submit_value - Надпись на кнопке
 		 */
 		private function admin_update_subscribe_form_settings($id_newsletter, $id_advertising_channel_page, $last_name, 
-															  $name, $email, $middle_name, $email,
+															  $name, $email, $middle_name,
 															  $phone_number, $policy_of_confidentiality, $subscribe_form_submit_value)
 		{	
 			global $wpdb;

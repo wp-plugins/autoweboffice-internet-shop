@@ -1,5 +1,5 @@
 <?php
-$html_subscribe_form .= '<form action="https://'.$awo_storesId.'.autokassir.ru/?r=personal/newsletter/subscriptions/add&amp;id='.$awo_id_stores.'&amp;lg=ru&amp;test=1" method="post" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">';
+$html_subscribe_form .= '<form action="https://'.$awo_storesId.'.autokassir.ru/?r=personal/newsletter/subscriptions/add&amp;id='.$awo_id_stores.'&amp;lg=ru" method="post" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">';
 
 $html_subscribe_form .= '<input type="hidden" value="'.$awo_id_newsletter.'" name="Contact[id_newsletter]">';
 $html_subscribe_form .= '<input type="hidden" value="'.$awo_id_advertising_channel_page.'" name="Contact[id_advertising_channel_page]">';
