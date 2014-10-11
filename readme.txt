@@ -68,6 +68,10 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 == Changelog ==
 
+= 0.8 =
+
+* Техническое обновление
+
 = 0.7 =
 
 * Добавлены заглушки для товаров без изображения
@@ -75,7 +79,7 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 = 0.6 =
 
-* FIX: Техническое обновление
+* Техническое обновление
 
 = 0.5 =
 

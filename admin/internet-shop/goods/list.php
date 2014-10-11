@@ -118,9 +118,14 @@ if(trim($awo_api_key_get) != '' and $awo_id_stores > 0
 <h3 class="title">Журнал обновления данных:</h3> 
 <p>Товары (последнее обновление): <?php echo $awo_goods_update_date;?></p>
 
-<form action="admin.php?page=awo-internet-shop&tab=goods" method="POST">
+<form style="float: left;" action="admin.php?page=awo-internet-shop&tab=goods" method="POST">
 <input type="hidden" name="action" value="goods_update" />
 	<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Обновить товары"></p>
+</form>
+
+<form style="float: right;" action="admin.php?page=awo-internet-shop&tab=goods" method="POST">
+<input type="hidden" name="action" value="goods_truncate" />
+	<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Очистить таблицу с товарами"></p>
 </form>
 <?php
 }

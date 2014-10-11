@@ -4,7 +4,7 @@
  * Plugin Name: AutoWebOffice Internet Shop
  * Plugin URI: http://wordpress.org/plugins/autoweboffice-internet-shop/
  * Description: Создание интернет магазина на базе платформы WordPress интегрированного с сервисом АвтоОфис
- * Version: 0.7
+ * Version: 0.8
  * Author: Alexander Kruglov (zakaz@autoweboffice.com)
  * Author URI: http://autoweboffice.com/
  */
@@ -247,6 +247,12 @@ if (!class_exists('AutowebofficeInternetShop'))
 						}
 						
 						break; 
+						
+					case 'goods_truncate':
+					
+						$wpdb->query('TRUNCATE TABLE `'.$this->tbl_awo_goods.'`;');
+						
+						break; 
 				}; 
 			}
 			
@@ -344,6 +350,12 @@ if (!class_exists('AutowebofficeInternetShop'))
 						}
 						
 						break; 
+						
+					case 'goods_truncate':
+
+						$wpdb->query('TRUNCATE TABLE `'.$this->tbl_awo_goods.'`;');
+						
+						break; 
 				}; 
 			}
 			
@@ -407,6 +419,12 @@ if (!class_exists('AutowebofficeInternetShop'))
 						}
 						
 						break; 
+					
+					case 'goods_truncate':
+
+						$wpdb->query('TRUNCATE TABLE `'.$this->tbl_awo_goods.'`;');
+						
+						break; 
 				}; 
 			}
 			
@@ -465,7 +483,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 			// Если подключена библиотека cURL
 			if($curl = curl_init()) 
 			{
-
+				
 				// Массив с GET параметрами запроса
 				$array_query = array(
 								// API KEY
@@ -483,6 +501,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 								// 'param[currentpage]'=>'2', // Показать 2-ю строку
 				);
 				 
+				$awo_storesId = trim($awo_storesId);
 
 				curl_setopt($curl, CURLOPT_URL, 'https://'.$awo_storesId.'.autokassir.ru/?r=api/rest/goods&'.http_build_query($array_query));
 				curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
@@ -516,10 +535,12 @@ if (!class_exists('AutowebofficeInternetShop'))
 						foreach ($obj as $key => $value)
 						{
 							$updateData[$key] = $value; // Наполняем массив
+							$formatData[] = '%s'; // Для всех полей указываем формат - Строка
 						}
 						
 						// Обновляем данные по Товару
-						$wpdb->update($this->tbl_awo_goods, $updateData, array('id_goods' => $obj->id_goods));
+						$wpdb->update($this->tbl_awo_goods, $updateData, array('id_goods' => $obj->id_goods), $formatData, array('%d'));
+						
 	
 					}
 					else // Если не существует, то добавляем данные по товару
@@ -559,6 +580,10 @@ if (!class_exists('AutowebofficeInternetShop'))
 		private function admin_update_api_settings($id_stores, $storesId, $api_key_get)
 		{	
 			global $wpdb;
+			
+			$id_stores = trim($id_stores);
+			$storesId = trim($storesId);
+			$api_key_get = trim($api_key_get);
 			
 			// Составляем сюриализованный массив со значениями настроек подключения
 			$api_settings = serialize(array('id_stores'=>$id_stores,
@@ -1486,6 +1511,10 @@ if (!class_exists('AutowebofficeInternetShop'))
 							`show_license_agreement` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Запрашивать лицензионное соглашение',
 							`partner_program_levels_used` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Использовать свои условия партнерской программы',
 							`partner_program_levels` text NOT NULL COMMENT 'Свои условия партнерской программы',
+							`goods_color_name` varchar(255) NOT NULL DEFAULT '' COMMENT 'Название свойства Цвет',
+						    `goods_size_name` varchar(255) NOT NULL COMMENT 'Название свойства Размер',
+						    `goods_color_used` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Использовать свойство Цвет',
+						    `goods_size_used` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Использовать свойство Размер',
 							`awo_description` longtext NOT NULL COMMENT 'Полное описание товара',
 							`awo_not_show` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Не показывать в каталоге',
 						PRIMARY KEY (`id_goods`),
