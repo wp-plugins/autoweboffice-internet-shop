@@ -1491,6 +1491,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 							`price_purchase` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT 'Цена закупки',
 							`url_page` varchar(255) NOT NULL,
 							`not_sold` tinyint(4) DEFAULT '0' COMMENT 'Товар не продается',
+							`not_sold_message` text NOT NULL COMMENT 'Сообщение при попытке купить снятый с продажи товар',
 							`new_of_sales` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Новинка продаж',
 							`hit_of_sales` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Хит продаж',
 							`special_offer` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Специальное предложение',
