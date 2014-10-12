@@ -6,7 +6,7 @@ if(isset($_SESSION['awo_shopping_cart']))
 	
 	$html_form_goods .= '<table>';
 	
-	$html_form_goods .= '<tr><th>Товар</th><th>Цена</th><th>Кол-во</th><th>Стоимость</th><th>&nbsp;</th></tr>';
+	$html_form_goods .= '<tr><th colspan="2">Товар</th><th>Цена</th><th>Кол-во</th><th>Стоимость</th><th>&nbsp;</th></tr>';
 	
 	foreach ($_SESSION['awo_shopping_cart'] AS $key => $goods)
 	{
