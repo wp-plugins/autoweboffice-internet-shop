@@ -4,7 +4,7 @@
  * Plugin Name: AutoWebOffice Internet Shop
  * Plugin URI: http://wordpress.org/plugins/autoweboffice-internet-shop/
  * Description: Создание интернет магазина на базе платформы WordPress интегрированного с сервисом АвтоОфис
- * Version: 0.9
+ * Version: 0.10
  * Author: Alexander Kruglov (zakaz@autoweboffice.com)
  * Author URI: http://autoweboffice.com/
  */
@@ -761,11 +761,10 @@ if (!class_exists('AutowebofficeInternetShop'))
 		
 		
 		/**
-		 * Функция добавления товара в Корзину заказа
+		 * Функция отображения Корзины заказа
 		 */
 		function ajax_show_message()
 		{
-		
 			$cart_quantity = 0;
 			$cart_sum = 0;
 			
@@ -1107,6 +1106,9 @@ if (!class_exists('AutowebofficeInternetShop'))
 		 */
 		public function get_link_to_single_order($atts)
 		{
+			// Сохраняем UTM-метоки, если они переданы в запросе
+			$this->save_utm();
+		
 			// Отвечает за запросы к базе данных
 			global $wpdb;
 			
@@ -1152,10 +1154,26 @@ if (!class_exists('AutowebofficeInternetShop'))
 			{
 				$link_to_order .= ' style="'.$style.'" ';
 			}
-			
-			$link_to_order .= ' value="'.$add_to_cart_submit_value.'" 
-				onClick="location.href=\'http://'.$awo_storesId.'.autokassir.ru/?r=ordering/cart/as1&id='.$id_goods.'&clean=true&quantity='.$quantity.'&lg=ru\'">';
-			
+						
+			// Если в сессии хранятся данные по UTM-меткам
+			if(isset($_SESSION['awo_utm']))
+			{
+				// Получаем данные по UTM-меткам
+				$utm = $_SESSION['awo_utm'];
+				
+				$link_to_order .= ' value="'.$add_to_cart_submit_value.'" 
+					onClick="location.href=\'http://'.$awo_storesId.'.autokassir.ru/?r=ordering/cart/as1&id='.$id_goods.'&clean=true&quantity='.$quantity.'&lg=ru&utm_source='.$utm['utm_source']
+																																								.'&utm_campaign='.$utm['utm_campaign']
+																																								.'&utm_term='.$utm['utm_term']
+																																								.'&utm_content='.$utm['utm_content']
+																																								.'&utm_medium='.$utm['utm_medium'].'\'">';
+	
+			}
+			else
+			{
+				$link_to_order .= ' value="'.$add_to_cart_submit_value.'" 
+					onClick="location.href=\'http://'.$awo_storesId.'.autokassir.ru/?r=ordering/cart/as1&id='.$id_goods.'&clean=true&quantity='.$quantity.'&lg=ru\'">';
+			}
 			
 			return $link_to_order;
 		}
@@ -1165,6 +1183,9 @@ if (!class_exists('AutowebofficeInternetShop'))
 		 */
 		public function get_cart_info_shot()
 		{
+			// Сохраняем UTM-метоки, если они переданы в запросе
+			$this->save_utm();
+		
 			$cart_quantity = 0;
 			$cart_sum = 0;
 			
@@ -1234,9 +1255,26 @@ if (!class_exists('AutowebofficeInternetShop'))
 			// Если в корзине есть товары
 			if($cart_quantity > 0)
 			{	
+					
+				// Если в сессии хранятся данные по UTM-меткам
+				if(isset($_SESSION['awo_utm']))
+				{
+					// Получаем данные по UTM-меткам
+					$utm = $_SESSION['awo_utm'];
 				
-				// Составляем форму для отправки запроса в АвтоОфис
-				$cart_info_shot .= '<form class="awo_checkout" action="https://'.$awo_storesId.'.autokassir.ru/?r=ordering/cart/s1&clean=true" method="post" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">';
+					// Составляем форму для отправки запроса в АвтоОфис
+					$cart_info_shot .= '<form class="awo_checkout" action="https://'.$awo_storesId.'.autokassir.ru/?r=ordering/cart/s1&clean=true&utm_source='.$utm['utm_source']
+																																			   .'&utm_campaign='.$utm['utm_campaign']
+																																			   .'&utm_term='.$utm['utm_term']
+																																			   .'&utm_content='.$utm['utm_content']
+																																			   .'&utm_medium='.$utm['utm_medium'].'" method="post" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">';
+				}
+				else
+				{
+					// Составляем форму для отправки запроса в АвтоОфис
+					$cart_info_shot .= '<form class="awo_checkout" action="https://'.$awo_storesId.'.autokassir.ru/?r=ordering/cart/s1&clean=true" method="post" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">';
+
+				}
 				
 				// Добавляем данные по товарам
 				$cart_info_shot .= $html_form_goods;
@@ -1450,6 +1488,25 @@ if (!class_exists('AutowebofficeInternetShop'))
 		}
 		
 		/**
+		 * Сохраняем UTM-метки в сессию
+		 */
+		public function save_utm()
+		{
+			// Если в сессии нет UTM-меток и они переданы в запросе
+			if(!isset($_SESSION['awo_utm']) and isset($_REQUEST['utm_source']) and isset($_REQUEST['utm_campaign']))
+			{
+				$utm['utm_source'] = $_REQUEST['utm_source']; // Кампания
+				$utm['utm_campaign'] = $_REQUEST['utm_campaign']; // Рекламное объявление
+				$utm['utm_term'] = $_REQUEST['utm_term']; // Ключевое слово
+				$utm['utm_content'] = $_REQUEST['utm_content']; // Место размещения
+				$utm['utm_medium'] = $_REQUEST['utm_medium']; // Тип источника трафика
+				
+				// Помещаем массив в сессию
+				$_SESSION['awo_utm'] = $utm;
+			}
+		}
+		
+		/**
 		 * Активация плагина
 		 */
 		function activate() 
@@ -1477,8 +1534,9 @@ if (!class_exists('AutowebofficeInternetShop'))
 			## Структура нашей таблицы для хранения информации о товарах магазина
 			$sql_tbl_awo_goods = "
 					CREATE TABLE `".$this->tbl_awo_goods."` (
-						`id_goods` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Код товара',
+							`id_goods` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Код товара',
 							`marking` varchar(255) NOT NULL COMMENT 'Артикул товара',
+							`id_goods_category` int(11) NOT NULL DEFAULT '0' COMMENT 'Код категории товара',
 							`in_affiliate` tinyint(4) NOT NULL DEFAULT '1' COMMENT 'Участвует в партнерке',
 							`show_in_affiliate` tinyint(4) NOT NULL DEFAULT '1' COMMENT 'Показывать в аккаунте партнера',
 							`goods` varchar(255) DEFAULT NULL COMMENT 'Название товара',
@@ -1513,16 +1571,15 @@ if (!class_exists('AutowebofficeInternetShop'))
 							`partner_program_levels_used` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Использовать свои условия партнерской программы',
 							`partner_program_levels` text NOT NULL COMMENT 'Свои условия партнерской программы',
 							`goods_color_name` varchar(255) NOT NULL DEFAULT '' COMMENT 'Название свойства Цвет',
-						    `goods_size_name` varchar(255) NOT NULL COMMENT 'Название свойства Размер',
-						    `goods_color_used` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Использовать свойство Цвет',
-						    `goods_size_used` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Использовать свойство Размер',
-							`awo_description` longtext NOT NULL COMMENT 'Полное описание товара',
-							`awo_not_show` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Не показывать в каталоге',
+							`goods_size_name` varchar(255) NOT NULL COMMENT 'Название свойства Размер',
+							`goods_color_used` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Использовать свойство Цвет',
+							`goods_size_used` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Использовать свойство Размер',
 						PRIMARY KEY (`id_goods`),
 						KEY `goods` (`goods`),
 						KEY `id_supplier` (`id_supplier`),
 						KEY `id_manufacturer` (`id_manufacturer`),
-						KEY `marking` (`marking`)
+						KEY `marking` (`marking`),
+						KEY `id_goods_category` (`id_goods_category`)
 					)".$charset_collate." AUTO_INCREMENT=1;"; 
 				
 			## Проверка на существование таблицы Товары

@@ -73,8 +73,25 @@ $cart_info_shot .= '<div style="background: url(\''.$this->plugin_url.'img/ico/o
 if($cart_quantity > 0)
 {	
 	
-	// Составляем форму для отправки запроса в АвтоОфис
-	$cart_info_shot .= '<form class="awo_checkout" action="https://'.$awo_storesId.'.autokassir.ru/?r=ordering/cart/s1&clean=true" method="post" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">';
+		
+	// Если в сессии хранятся данные по UTM-меткам
+	if(isset($_SESSION['awo_utm']))
+	{
+		// Получаем данные по UTM-меткам
+		$utm = $_SESSION['awo_utm'];
+	
+		// Составляем форму для отправки запроса в АвтоОфис
+		$cart_info_shot .= '<form class="awo_checkout" action="https://'.$awo_storesId.'.autokassir.ru/?r=ordering/cart/s1&clean=true&utm_source='.$utm['utm_source']
+																																   .'&utm_campaign='.$utm['utm_campaign']
+																																   .'&utm_term='.$utm['utm_term']
+																																   .'&utm_content='.$utm['utm_content']
+																																   .'&utm_medium='.$utm['utm_medium'].'" method="post" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">';
+	}
+	else
+	{
+		// Составляем форму для отправки запроса в АвтоОфис
+		$cart_info_shot .= '<form class="awo_checkout" action="https://'.$awo_storesId.'.autokassir.ru/?r=ordering/cart/s1&clean=true" method="post" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">';
+	}
 	
 	// Добавляем данные по товарам
 	$cart_info_shot .= $html_form_goods;
@@ -101,6 +118,6 @@ else
 	
 	$cart_info_shot .= '<input style="margin:10px 0px 20px 0px;" type="submit" class="awo_show_message_hide" value="Продолжить покупки">';
 }
-					
+			
 $cart_info_shot .= '</div>';
 ?>
