@@ -37,8 +37,20 @@ if(isset($_SESSION['awo_shopping_cart']))
 		// Вормируем название товара для печати на экран
 		$goods_name = htmlspecialchars(trim($awo_goods->goods));
 		
+		$image = $awo_goods->image;
+		
+		// Если есть данные по изображению товара
+		if(trim($image) != '')
+		{
+			$image_url = 'https://'.$awo_storesId.'.autokassir.ru/images/goods/pics/'.$image;
+		}
+		else
+		{
+			$image_url = '/wp-content/plugins/autoweboffice-internet-shop/img/cap/goods.png';
+		}
+		
 		$html_form_goods .= '<tr>';
-		$html_form_goods .= '<td style="vertical-align: middle;"><b><img style="vertical-align: top; width: 150px;" style="vertical-align: top;" src="https://'.$awo_storesId.'.autokassir.ru/images/goods/pics/'.$awo_goods->image.'" alt="'.$goods_name.'" title="'.$goods_name.'"></td>';
+		$html_form_goods .= '<td style="vertical-align: middle;"><b><img style="vertical-align: top; width: 150px;" style="vertical-align: top;" src="'.$image_url.'" alt="'.$goods_name.'" title="'.$goods_name.'"></td>';
 		$html_form_goods .= '<td style="vertical-align: middle;"><b>'.$goods_name.'</b><br /><br />'.$awo_goods->brief_description.'</td>';
 		$html_form_goods .= '<td style="vertical-align: middle;">'.number_format($awo_goods->price, 2, '.', ' ').'&nbsp;RUB</td>';
 		$html_form_goods .= '<td style="vertical-align: middle;">'.$quantity.'</td>';

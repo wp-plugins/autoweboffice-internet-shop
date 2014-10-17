@@ -714,7 +714,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 		function ajax_add_goods_to_order() 
 		{
 			// Если передан код твоара
-			if(isset($_REQUEST['id_goods']))
+			if(isset($_REQUEST['id_goods']) AND $_REQUEST['id_goods'] > 0)
 			{
 				// Получаем ранее накопленные данные по товарам
 				$Goods = $_SESSION['awo_shopping_cart'];

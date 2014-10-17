@@ -19,6 +19,8 @@ foreach ($awo_goods as $key => $goods)
 		break;
 	}
 	
+	$id_goods = $goods->id_goods;
+	
 
 	$goods_name = htmlspecialchars(trim($goods->goods));
 			
