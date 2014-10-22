@@ -22,12 +22,9 @@ include_once('navigation.php');
 		</tr>
 		
 		<tr valign="top">
-			<th scope="row"><label for="awo_catalog_goods_in_line">Товаров в строке:</label></th>
-			<td>
-				<select name="awo_catalog_goods_in_line" style="min-width: 100px;" id="awo_catalog_goods_in_line">
-					<option class="level-0" value="3" <?php if($awo_catalog_goods_in_line == 3 or $awo_catalog_goods_in_line == 0) echo 'selected="selected"';?>>3 товара</option>
-					<option class="level-0" value="4" <?php if($awo_catalog_goods_in_line == 4) echo 'selected="selected"';?>>4 товара</option>
-				</select>
+			<th scope="row"><label for="awo_catalog_goods_per_page">Ширина блока с одним товаром:</label></th>
+			<td><input name="awo_catalog_goods_width" type="number" id="awo_catalog_goods_width" 
+			value="<?php echo $awo_catalog_goods_width; ?>" class="small-text">
 			</td>
 		</tr>
 		

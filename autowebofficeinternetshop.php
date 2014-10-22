@@ -4,7 +4,7 @@
  * Plugin Name: AutoWebOffice Internet Shop
  * Plugin URI: http://wordpress.org/plugins/autoweboffice-internet-shop/
  * Description: Создание интернет магазина на базе платформы WordPress интегрированного с сервисом АвтоОфис
- * Version: 0.10
+ * Version: 0.11
  * Author: Alexander Kruglov (zakaz@autoweboffice.com)
  * Author URI: http://autoweboffice.com/
  */
@@ -215,7 +215,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 				{
 					case 'save_catalog_settings':
 						// Сохраняем переданные настройки корзины заказа
-						$result_update_catalog_settings = $this->admin_update_catalog_settings($_POST['awo_catalog_goods_in_line'], $_POST['awo_catalog_goods_per_page'], $_POST['awo_catalog_settings_submit_value']);
+						$result_update_catalog_settings = $this->admin_update_catalog_settings($_POST['awo_catalog_goods_width'], $_POST['awo_catalog_goods_per_page'], $_POST['awo_catalog_settings_submit_value']);
 						
 						break;
 					case 'save_subscribe_form_settings':
@@ -284,7 +284,13 @@ if (!class_exists('AutowebofficeInternetShop'))
 			// Получаем массив с настройками отображения Каталога товаров
 			$catalog_settings = unserialize($awo_settings->catalog_settings);
 			
-			$awo_catalog_goods_in_line = (int)$catalog_settings['catalog_goods_in_line']; 
+			$awo_catalog_goods_width = (int)$catalog_settings['awo_catalog_goods_width']; 
+			
+			if($awo_catalog_goods_width < '150')
+			{
+				$awo_catalog_goods_width = 150; 
+			}
+			
 			$awo_catalog_goods_per_page = (int)$catalog_settings['catalog_goods_per_page']; 
 			$awo_catalog_settings_submit_value = $catalog_settings['catalog_settings_submit_value']; 
 
@@ -483,7 +489,6 @@ if (!class_exists('AutowebofficeInternetShop'))
 			// Если подключена библиотека cURL
 			if($curl = curl_init()) 
 			{
-				
 				// Массив с GET параметрами запроса
 				$array_query = array(
 								// API KEY
@@ -524,19 +529,64 @@ if (!class_exists('AutowebofficeInternetShop'))
 				// Цикл по массиву с товарами
 				foreach($out_obj as $key => $obj)
 				{
-
+				
 					// Проверяем существует ли данный товар у наз в БД
 					$awo_goods = $wpdb->get_row("SELECT id_goods FROM `".$this->tbl_awo_goods."` WHERE id_goods = ".$obj->id_goods);
 					
 					// Если товар уже существует, то обновляем информацию
 					if($awo_goods)
 					{
+						
+						$updateData['id_goods'] = $obj->id_goods;
+						$updateData['marking'] = $obj->marking;
+						$updateData['id_goods_category'] = $obj->id_goods_category;
+						$updateData['in_affiliate'] = $obj->in_affiliate;
+						$updateData['show_in_affiliate'] = $obj->show_in_affiliate;
+						$updateData['goods'] = $obj->goods;
+						$updateData['variants_name'] = $obj->variants_name;
+						$updateData['image'] = $obj->image;
+						$updateData['url_external_image'] = $obj->url_external_image;
+						$updateData['url_external_image_used'] = $obj->url_external_image_used;
+						$updateData['brief_description'] = $obj->brief_description;
+						$updateData['price'] = $obj->price;
+						$updateData['price_purchase'] = $obj->price_purchase;
+						$updateData['url_page'] = $obj->url_page;
+						$updateData['not_sold'] = $obj->not_sold;
+						$updateData['not_sold_message'] = $obj->not_sold_message;
+						$updateData['new_of_sales'] = $obj->new_of_sales;
+						$updateData['hit_of_sales'] = $obj->hit_of_sales;
+						$updateData['special_offer'] = $obj->special_offer;
+						$updateData['id_goods_kind'] = $obj->id_goods_kind;
+						$updateData['deleted'] = $obj->deleted;
+						$updateData['creation_date'] = $obj->creation_date;
+						$updateData['order_fields'] = $obj->order_fields;
+						$updateData['information_single_order'] = $obj->information_single_order;
+						$updateData['information_cart_order'] = $obj->information_cart_order;
+						$updateData['additional_order_fields'] = $obj->additional_order_fields;
+						$updateData['rest_in_stock'] = $obj->rest_in_stock;
+						$updateData['id_supplier'] = $obj->id_supplier;
+						$updateData['id_manufacturer'] = $obj->id_manufacturer;
+						$updateData['id_employee_created'] = $obj->id_employee_created;
+						$updateData['id_employee_deleted'] = $obj->id_employee_deleted;
+						$updateData['deleted_date'] = $obj->deleted_date;
+						$updateData['information_for_personal'] = $obj->information_for_personal;
+						$updateData['show_license_agreement'] = $obj->show_license_agreement;
+						$updateData['partner_program_levels_used'] = $obj->partner_program_levels_used;
+						$updateData['partner_program_levels'] = $obj->partner_program_levels;
+						$updateData['goods_color_name'] = $obj->goods_color_name;
+						$updateData['goods_size_name'] = $obj->goods_size_name;
+						$updateData['goods_color_used'] = $obj->goods_color_used;
+						$updateData['goods_size_used'] = $obj->goods_size_used;
+						
+						// Чистим массив
+						$formatData = array();
+						
 						// Составляем массив со значениями полей
-						foreach ($obj as $key => $value)
+						foreach ($updateData as $value)
 						{
-							$updateData[$key] = $value; // Наполняем массив
 							$formatData[] = '%s'; // Для всех полей указываем формат - Строка
 						}
+
 						
 						// Обновляем данные по Товару
 						$wpdb->update($this->tbl_awo_goods, $updateData, array('id_goods' => $obj->id_goods), $formatData, array('%d'));
@@ -545,19 +595,61 @@ if (!class_exists('AutowebofficeInternetShop'))
 					}
 					else // Если не существует, то добавляем данные по товару
 					{
+						
+						$insertData['id_goods'] = $obj->id_goods;
+						$insertData['marking'] = $obj->marking;
+						$insertData['id_goods_category'] = $obj->id_goods_category;
+						$insertData['in_affiliate'] = $obj->in_affiliate;
+						$insertData['show_in_affiliate'] = $obj->show_in_affiliate;
+						$insertData['goods'] = $obj->goods;
+						$insertData['variants_name'] = $obj->variants_name;
+						$insertData['image'] = $obj->image;
+						$insertData['url_external_image'] = $obj->url_external_image;
+						$insertData['url_external_image_used'] = $obj->url_external_image_used;
+						$insertData['brief_description'] = $obj->brief_description;
+						$insertData['price'] = $obj->price;
+						$insertData['price_purchase'] = $obj->price_purchase;
+						$insertData['url_page'] = $obj->url_page;
+						$insertData['not_sold'] = $obj->not_sold;
+						$insertData['not_sold_message'] = $obj->not_sold_message;
+						$insertData['new_of_sales'] = $obj->new_of_sales;
+						$insertData['hit_of_sales'] = $obj->hit_of_sales;
+						$insertData['special_offer'] = $obj->special_offer;
+						$insertData['id_goods_kind'] = $obj->id_goods_kind;
+						$insertData['deleted'] = $obj->deleted;
+						$insertData['creation_date'] = $obj->creation_date;
+						$insertData['order_fields'] = $obj->order_fields;
+						$insertData['information_single_order'] = $obj->information_single_order;
+						$insertData['information_cart_order'] = $obj->information_cart_order;
+						$insertData['additional_order_fields'] = $obj->additional_order_fields;
+						$insertData['rest_in_stock'] = $obj->rest_in_stock;
+						$insertData['id_supplier'] = $obj->id_supplier;
+						$insertData['id_manufacturer'] = $obj->id_manufacturer;
+						$insertData['id_employee_created'] = $obj->id_employee_created;
+						$insertData['id_employee_deleted'] = $obj->id_employee_deleted;
+						$insertData['deleted_date'] = $obj->deleted_date;
+						$insertData['information_for_personal'] = $obj->information_for_personal;
+						$insertData['show_license_agreement'] = $obj->show_license_agreement;
+						$insertData['partner_program_levels_used'] = $obj->partner_program_levels_used;
+						$insertData['partner_program_levels'] = $obj->partner_program_levels;
+						$insertData['goods_color_name'] = $obj->goods_color_name;
+						$insertData['goods_size_name'] = $obj->goods_size_name;
+						$insertData['goods_color_used'] = $obj->goods_color_used;
+						$insertData['goods_size_used'] = $obj->goods_size_used;
+						
+						// Чистим массив
+						$formatData = array();
+						
 						// Составляем массив со значениями полей
-						foreach ($obj as $key => $value)
+						foreach ($insertData as $value)
 						{
-							$insertData[$key] = $value; // Наполняем массив
 							$formatData[] = '%s'; // Для всех полей указываем формат - Строка
 						}
 						
-						$awo_description = '<b>'.$obj->goods.'</b>
-						'.$obj->brief_description.'
-						<p style="text-align: center;">[awo_link_to_order id_goods="'.$obj->id_goods.'"] [awo_link_to_single_order id_goods="'.$obj->id_goods.'"]</p>';
-						
+												
 						// Заполнение полей плагина
 						$insertData['awo_description'] = $awo_description; // Шаблон для страницы описания товара
+						$formatData[] = '%s'; // Для всех полей указываем формат - Строка
 						
 						$wpdb->insert($this->tbl_awo_goods, $insertData, $formatData);
 					}
@@ -602,16 +694,16 @@ if (!class_exists('AutowebofficeInternetShop'))
 		
 		/**
 		 * Функция сохранения настроек каталога магазина
-		 * $catalog_goods_in_line - Количество товаров в строке
+		 * $awo_catalog_goods_width - Ширина блока с одним товаром
 		 * $catalog_goods_per_page - Количество товаров на странице
 		 * $catalog_settings_submit_value - Надпись на кнопке Добавить в корзину
 		 */
-		private function admin_update_catalog_settings($catalog_goods_in_line, $catalog_goods_per_page, $catalog_settings_submit_value)
+		private function admin_update_catalog_settings($awo_catalog_goods_width, $catalog_goods_per_page, $catalog_settings_submit_value)
 		{	
 			global $wpdb;
 			
 			// Составляем сюриализованный массив со значениями настроек подключения
-			$catalog_settings = serialize(array('catalog_goods_in_line'=>$catalog_goods_in_line,
+			$catalog_settings = serialize(array('awo_catalog_goods_width'=>$awo_catalog_goods_width, 
 											'catalog_goods_per_page'=>$catalog_goods_per_page, 
 											'catalog_settings_submit_value' => $catalog_settings_submit_value));
 			
@@ -900,8 +992,8 @@ if (!class_exists('AutowebofficeInternetShop'))
 			global $wpdb;
 			
 			// Получаем значения переданных атрибутов
-			extract(shortcode_atts(array(
-				'catalog_goods_in_line' => '', // Если атрибут awo_catalog_goods_in_line не указан, то по умолчанию ставим 0
+			extract(shortcode_atts(array( 
+				'awo_catalog_goods_width' => '150',
 				'catalog_goods_per_page' => '',
 				'catalog_show_search' => '1',
 				'catalog_goods_type' => 'default',
@@ -932,13 +1024,13 @@ if (!class_exists('AutowebofficeInternetShop'))
 			$catalog_settings = unserialize($awo_settings->catalog_settings);
 			
 			// Если передали настройки через параметры Шоткода
-			if($catalog_goods_in_line != '')
+			if($awo_catalog_goods_width != 0 AND $awo_catalog_goods_width > 150)
 			{
-				$awo_catalog_goods_in_line = (int)$catalog_goods_in_line;
+				$awo_catalog_goods_width = (int)$awo_catalog_goods_width;
 			}
 			else
 			{
-				$awo_catalog_goods_in_line = (int)$catalog_settings['catalog_goods_in_line']; 
+				$awo_catalog_goods_width = (int)$catalog_settings['awo_catalog_goods_width']; 
 			}
 			
 			// Если передали настройки через параметры Шоткода
@@ -1055,17 +1147,10 @@ if (!class_exists('AutowebofficeInternetShop'))
 				include_once('html/html_catalog_search.php');
 			}
 			
-			switch ($awo_catalog_goods_in_line) 
-			{
-				case '4':
-					// Подключаем страницу с настроками Формы подписки
-					include_once('html/html_catalog_line_4.php');					
-					break;
-				default:
-					// Подключаем страницу с настроками API
-					include_once('html/html_catalog_line_3.php');					
-					break;
-			}
+
+			// Подключаем страницу с настроками Формы подписки
+			include_once('html/html_catalog.php');					
+
 			
 			// Получаем код пагинации для страницы
 			$paginate_links = $this->get_paginate_links($total_pages);

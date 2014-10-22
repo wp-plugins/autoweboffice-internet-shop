@@ -30,7 +30,6 @@ include_once('navigation.php');
 <p>Дополнительная настройка</p>
 <p>Шоткод [awo_catalog_of_goods] может принимать дополнительные параметры:</p>
 <ul>
-	<li><b>catalog_goods_in_line</b>  – количество товаров выводимых в одной строке каталога</li>
 	<li><b>catalog_goods_per_page</b>  – количество товаров выводимых на одной странице каталога</li>
 	<li><b>catalog_show_search</b> – выводить или нет поле поиска по товарам (1 - выводить, 0 - скрыть)</li>
 	<li><b>catalog_goods_type</b> – можно указать тип каталога (default - все товары, new - новинки, hit - хиты продаж, special - специальные предложения)</li>
@@ -38,7 +37,7 @@ include_once('navigation.php');
 </ul>
 <p>Для передачи, добавьте необходимые вам параметры в тело шоткода:</p>
 <ul>
-	<li>[awo_catalog_of_goods catalog_goods_in_line=“3” catalog_goods_per_page=“12” catalog_settings_submit_value=“Добавить в корзину”]</li>
+	<li>[awo_catalog_of_goods catalog_goods_per_page=“12” catalog_settings_submit_value=“Добавить в корзину”]</li>
 </ul>
 
 <h3>Кнопки «Добавить в корзину» и «Заказать прямо сейчас»</h3>
