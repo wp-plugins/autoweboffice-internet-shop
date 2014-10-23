@@ -1149,7 +1149,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 			
 
 			// Подключаем страницу с настроками Формы подписки
-			include_once('html/html_catalog_goods.php');					
+			include_once('html/html_catalog.php');					
 
 			
 			// Получаем код пагинации для страницы

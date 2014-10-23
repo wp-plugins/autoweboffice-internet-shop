@@ -1,4 +1,4 @@
-<?php  
+<?php 
 $html_catalog .= '<div align="center">';
 
 // Для подсчет номера товара
