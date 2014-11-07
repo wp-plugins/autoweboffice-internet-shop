@@ -646,11 +646,6 @@ if (!class_exists('AutowebofficeInternetShop'))
 							$formatData[] = '%s'; // Для всех полей указываем формат - Строка
 						}
 						
-												
-						// Заполнение полей плагина
-						// $insertData['awo_description'] = $awo_description; // Шаблон для страницы описания товара
-						// $formatData[] = '%s'; // Для всех полей указываем формат - Строка
-						
 						$wpdb->insert($this->tbl_awo_goods, $insertData, $formatData);
 					}
 				}
@@ -1652,7 +1647,6 @@ if (!class_exists('AutowebofficeInternetShop'))
 						  `show_license_agreement` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Запрашивать лицензионное соглашение',
 						  `partner_program_levels_used` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Использовать свои условия партнерской программы',
 						  `partner_program_levels` text NOT NULL COMMENT 'Свои условия партнерской программы',
-						  `awo_description` longtext NOT NULL COMMENT 'Полное описание товара',
 						  `special_offer` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Специальное предложение',
 						  `awo_not_show` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Не показывать в каталоге',
 						  `id_goods_category` int(11) NOT NULL DEFAULT '0' COMMENT 'Код категории товара',
