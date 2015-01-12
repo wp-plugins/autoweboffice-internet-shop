@@ -16,6 +16,18 @@
 		-->
 		
 		<tr valign="top">
+			<th scope="row"><label for="awo_not_show">Страница описания на сайте:</label></th>
+			<td><a href="<?php echo $awo_goods->url_page;?>" target="_blank"><?php echo $awo_goods->url_page;?></a></td>
+			</td>
+		</tr>
+		
+		<tr valign="top">
+			<th scope="row"><label for="awo_not_show">Страница редактирования в АвтоОфис:</label></th>
+			<td><a href="<?php echo 'https://'.$awo_storesId.'.autokassir.ru/?r=shop/goods/admin/update&id='.$awo_goods->id_goods.'&lg=ru';?>" target="_blank"><?php echo 'https://'.$awo_storesId.'.autokassir.ru/?r=shop/goods/admin/update&id='.$awo_goods->id_goods.'&lg=ru'?></a></td>
+			</td>
+		</tr>
+		
+		<tr valign="top">
 			<th scope="row"><label for="awo_not_show">Шоткод «Добавить в корзину»:</label></th>
 			<td><b><?php echo '[awo_link_to_order id_goods="'.$awo_goods->id_goods.'"]';?></b></td>
 			</td>

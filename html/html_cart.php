@@ -52,9 +52,9 @@ if(isset($_SESSION['awo_shopping_cart']))
 		$html_form_goods .= '<tr>';
 		$html_form_goods .= '<td style="vertical-align: middle;"><b><img style="vertical-align: top; width: 150px;" style="vertical-align: top;" src="'.$image_url.'" alt="'.$goods_name.'" title="'.$goods_name.'"></td>';
 		$html_form_goods .= '<td style="vertical-align: middle;"><b>'.$goods_name.'</b><br /><br />'.$awo_goods->brief_description.'</td>';
-		$html_form_goods .= '<td style="vertical-align: middle;">'.number_format($awo_goods->price, 2, '.', ' ').'&nbsp;RUB</td>';
+		$html_form_goods .= '<td style="vertical-align: middle;">'.number_format($awo_goods->price, 2, '.', ' ').'&nbsp;'.$this->get_currency_str().'</td>';
 		$html_form_goods .= '<td style="vertical-align: middle;">'.$quantity.'</td>';
-		$html_form_goods .= '<td style="vertical-align: middle;">'.number_format($goods_sum, 2, '.', ' ').'&nbsp;RUB</td>';
+		$html_form_goods .= '<td style="vertical-align: middle;">'.number_format($goods_sum, 2, '.', ' ').'&nbsp;'.$this->get_currency_str().'</td>';
 		$html_form_goods .= '<td style="vertical-align: middle;"><a class="awo_delete_from_cart" id="'.$id_goods.'" href="#">X</a></td>';
 		$html_form_goods .= '</tr>';
 		
@@ -63,7 +63,7 @@ if(isset($_SESSION['awo_shopping_cart']))
 	
 	if($cart_quantity > 0)
 	{
-		$html_form_goods .= '<tr><td colspan="3"></td><td><b>Всего к оплате:</b></td><td><b>'.number_format($cart_sum, 2, '.', ' ').'&nbsp;RUB</b></td><td></td></tr>';
+		$html_form_goods .= '<tr><td colspan="3"></td><td><b>Всего к оплате:</b></td><td><b>'.number_format($cart_sum, 2, '.', ' ').'&nbsp;'.$this->get_currency_str().'</b></td><td></td></tr>';
 	}
 	else
 	{

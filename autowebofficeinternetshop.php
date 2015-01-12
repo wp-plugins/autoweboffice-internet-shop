@@ -4,7 +4,7 @@
  * Plugin Name: AutoWebOffice Internet Shop
  * Plugin URI: http://wordpress.org/plugins/autoweboffice-internet-shop/
  * Description: Создание интернет магазина на базе платформы WordPress интегрированного с сервисом АвтоОфис
- * Version: 0.13
+ * Version: 0.14
  * Author: Alexander Kruglov (zakaz@autoweboffice.com)
  * Author URI: http://autoweboffice.com/
  */
@@ -42,6 +42,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 			## обязательно должна быть глобально объявлена перменная $wpdb
 			$this->tbl_awo_goods   		= $wpdb->prefix.'awo_goods'; // Товары
 			$this->tbl_awo_settings   	= $wpdb->prefix.'awo_settings'; // Настройки
+			$this->tbl_awo_goods_category = $wpdb->prefix.'awo_goods_category'; // Категории товаров
 			
 			## Функция которая исполняется при активации плагина
 			register_activation_hook($this->plugin_name, array(&$this, 'activate'));
@@ -234,6 +235,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 						// Обновляем информацию по товарам
 						$result_update_goods = $this->admin_update_goods();
 						
+						
 						// Если данные по товарам успешно обновились, то сохраняем дату обновления в настройках плагина
 						if($result_update_goods)
 						{
@@ -343,6 +345,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 						// Обновляем информацию по товарам
 						$result_update_goods = $this->admin_update_goods();
 						
+						
 						// Если данные по товарам успешно обновились, то сохраняем дату обновления в настройках плагина
 						if($result_update_goods)
 						{
@@ -412,8 +415,17 @@ if (!class_exists('AutowebofficeInternetShop'))
 						// Обновляем информацию по товарам
 						$result_update_goods = $this->admin_update_goods();
 						
+						// Обновляем информацию по категориям товаров
+						$result_update_goods_category = $this->admin_update_goods_category();
+						//var_dump($this->admin_update_goods_category()); exit();
+						
+						// Обновляем информацию по настройкам магазина
+						//var_dump($this->admin_update_settings()); exit();
+						$result_update_settings = $this->admin_update_settings();
+						
+						
 						// Если данные по товарам успешно обновились, то сохраняем дату обновления в настройках плагина
-						if($result_update_goods)
+						if($result_update_goods AND $result_update_goods_category)
 						{
 							// Составляем массив для обновления данных
 							$updateData = array(
@@ -657,6 +669,204 @@ if (!class_exists('AutowebofficeInternetShop'))
 			
 			return true;
 		}
+		
+		
+		/**
+		 * Функция для обновления информации о категориях товаров
+		 */
+		private function admin_update_goods_category()
+		{	
+			global $wpdb;
+			
+			// Получаем данные по настройкам плагина
+			$awo_settings = $this->admin_get_settings();
+			
+			// Получаем массив с настройками подключения по API
+			$api_settings = unserialize($awo_settings->api_settings);
+
+			$awo_storesId = $api_settings['storesId'];
+			$awo_api_key_get = $api_settings['api_key_get'];
+			
+			// Если подключена библиотека cURL
+			if($curl = curl_init()) 
+			{
+				// Массив с GET параметрами запроса
+				$array_query = array(
+								// API KEY
+								'key' =>$awo_api_key_get,
+				
+								// Передаем критерии поиска
+								// 'search[creation_date_start]' => '2014-06-01 00:00:00', // Дата создания счета От
+								// 'search[creation_date_end]'=>'2014-07-01 00:00:00', // Дата создания счета До
+								
+								// Передаем настройки сортировки
+								'param[sort]'=>'id_goods_category ASC', // Сортируем по возрастанию. Поле: Дата создания счета
+								
+								// Указываем дополнительные настройки выборки
+								// 'param[pagesize]'=>'10', // Выводить по 10 элементов на стройке
+								// 'param[currentpage]'=>'2', // Показать 2-ю строку
+				);
+				 
+				$awo_storesId = trim($awo_storesId);
+
+				curl_setopt($curl, CURLOPT_URL, 'https://'.$awo_storesId.'.autokassir.ru/?r=api/rest/goodscategory&'.http_build_query($array_query));
+				curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+				curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+				curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+				
+				$out_json = curl_exec($curl);
+				
+				curl_close($curl);
+				
+				
+				// Декодирует JSON строку в объект с данными
+				$out_obj = json_decode($out_json);
+				
+				// Если не получили объект с данными, то выводим сообщение об ошибке
+				if(!is_array($out_obj))
+				{
+					return false;
+				}
+				
+
+				// Цикл по массиву с категориями товаров
+				foreach($out_obj as $key => $obj)
+				{
+				
+					// Проверяем существует ли данный категория товара у нас в БД
+					$awo_goods_category = $wpdb->get_row("SELECT id_goods_category FROM `".$this->tbl_awo_goods_category."` WHERE id_goods_category = ".$obj->id_goods_category);
+					
+					// Если категория уже существует, то обновляем информацию
+					if($awo_goods_category)
+					{
+						
+						$updateData['id_goods_category'] = $obj->id_goods_category;
+						$updateData['goods_category'] = $obj->goods_category;
+						$updateData['brief_description'] = $obj->brief_description;
+						$updateData['id_goods_category_parent'] = $obj->id_goods_category_parent;
+						$updateData['id_employee_created'] = $obj->id_employee_created;
+						$updateData['id_employee_deleted'] = $obj->id_employee_deleted;
+						$updateData['deleted'] = $obj->deleted;
+						$updateData['deleted_date'] = $obj->deleted_date;
+						$updateData['creation_date'] = $obj->creation_date;
+						
+						// Чистим массив
+						$formatData = array();
+						
+						// Составляем массив со значениями полей
+						foreach ($updateData as $value)
+						{
+							$formatData[] = '%s'; // Для всех полей указываем формат - Строка
+						}
+
+						
+						// Обновляем данные по Товару
+						$wpdb->update($this->tbl_awo_goods_category, $updateData, array('id_goods_category' => $obj->id_goods_category), $formatData, array('%d'));
+						
+	
+					}
+					else // Если не существует, то добавляем данные по категории товара
+					{
+
+						$insertData['id_goods_category'] = $obj->id_goods_category;
+						$insertData['goods_category'] = $obj->goods_category;
+						$insertData['brief_description'] = $obj->brief_description;
+						$insertData['id_goods_category_parent'] = $obj->id_goods_category_parent;
+						$insertData['id_employee_created'] = $obj->id_employee_created;
+						$insertData['id_employee_deleted'] = $obj->id_employee_deleted;
+						$insertData['deleted'] = $obj->deleted;
+						$insertData['deleted_date'] = $obj->deleted_date;
+						$insertData['creation_date'] = $obj->creation_date;
+						
+						// Чистим массив
+						$formatData = array();
+						
+						// Составляем массив со значениями полей
+						foreach ($insertData as $value)
+						{
+							$formatData[] = '%s'; // Для всех полей указываем формат - Строка
+						}
+						
+						$wpdb->insert($this->tbl_awo_goods_category, $insertData, $formatData);
+					}
+				}
+			}
+			else
+			{
+				return false;
+			}
+			
+			return true;
+		}
+		
+		
+		/**
+		 * Функция для обновления информации о настройках магазина
+		 */
+		private function admin_update_settings()
+		{	
+			global $wpdb;
+			
+			// Получаем данные по настройкам плагина
+			$awo_settings = $this->admin_get_settings();
+			
+			// Получаем массив с настройками подключения по API
+			$api_settings = unserialize($awo_settings->api_settings);
+
+			$awo_storesId = $api_settings['storesId'];
+			$awo_api_key_get = $api_settings['api_key_get'];
+			
+			// Если подключена библиотека cURL
+			if($curl = curl_init()) 
+			{
+				// Массив с GET параметрами запроса
+				$array_query = array(
+								// API KEY
+								'key' =>$awo_api_key_get,
+				
+							
+				);
+				 
+				$awo_storesId = trim($awo_storesId);
+
+				curl_setopt($curl, CURLOPT_URL, 'https://'.$awo_storesId.'.autokassir.ru/?r=api/rest/mainsettings&'.http_build_query($array_query));
+				curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+				curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+				curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+				
+				$out_json = curl_exec($curl);
+				
+				curl_close($curl);
+				
+				
+				// Декодирует JSON строку в объект с данными
+				$out_obj = json_decode($out_json);
+				
+				// Если не получили объект с данными, то выводим сообщение об ошибке
+				if(!is_array($out_obj))
+				{
+					return false;
+				}
+				
+
+				// Составляем массив для обновления данных
+				$updateData = array(
+							'id_currency' => $out_obj[0]->id_currency,			
+				);
+							
+				// Сохраняем в настройках плагина
+				$wpdb->update($this->tbl_awo_settings, $updateData, array('id_settings' => 1));
+							
+			}
+			else
+			{
+				return false;
+			}
+			
+			return true;
+		}
+		
+		
 		
 		/**
 		 * Функция сохранения настроек подключения по API
@@ -982,7 +1192,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 		 * Функция преобразования Шоткода в Каталог товаров
 		 */
 		public function get_catalog_of_goods($atts)
-		{
+		{	
 			// Отвечает за запросы к базе данных
 			global $wpdb;
 			
@@ -1005,6 +1215,9 @@ if (!class_exists('AutowebofficeInternetShop'))
 			
 			$id_goods = (int)$_GET['id_goods'];
 			
+			if(isset($_GET['id_goods_category'])) $id_goods_category = (int)$_GET['id_goods_category'];
+			
+			
 			// Если передан код товара
 			if($id_goods > 0)
 			{
@@ -1014,6 +1227,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 				include_once('html/html_goods.php');
 				exit();
 			}
+			
 			
 			// Получаем массив с настройками отображения Каталога товаров
 			$catalog_settings = unserialize($awo_settings->catalog_settings);
@@ -1053,16 +1267,23 @@ if (!class_exists('AutowebofficeInternetShop'))
 			{
 				$awo_catalog_settings_submit_value = 'Добавить в корзину';
 			}
-			
-			// Вычисляем номер первого товара
-			$paged = $_GET['paged'];
-			
-			$limit_start = 0;
-			
-			// Если номер страницы больше 0 и нет критерий поиска
-			if($paged > 0 AND $_POST['awo_search'] != true)
+				
+				
+			// Категории и товары к ним (Главная страница)
+			$awo_goods_category_sql = "	SELECT * 
+								FROM `".$this->tbl_awo_goods_category."` 
+								WHERE deleted=0 
+								AND id_goods_category_parent = 0
+								ORDER BY goods_category
+								";
+
+			// Получаем данные по Категориям товара
+			$awo_goods_category = $wpdb->get_results($awo_goods_category_sql);
+				
+			// Если нет категорий
+			if(count($awo_goods_category) == 0)
 			{
-				$limit_start = ($paged - 1) * $awo_catalog_goods_per_page;
+				$id_goods_category = 0;
 			}
 			
 			// Для составления условий поиска
@@ -1071,7 +1292,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 			$awo_search_goods = trim($_POST['awo_search_goods']);
 			
 			// Если переданы критерии поиска по товарам
-			if($awo_search_goods != '')
+			if($awo_search_goods != '' AND $awo_search_goods != 'Поиск по всем товарам')
 			{
 				$where .= " AND `goods` LIKE '%".$awo_search_goods."%'";
 			}
@@ -1094,65 +1315,128 @@ if (!class_exists('AutowebofficeInternetShop'))
 						break;
 				}
 			}
-
 			
-			$awo_goods_sql = "	SELECT * 
-								FROM `".$this->tbl_awo_goods."` 
-								WHERE deleted=0 
-									AND not_sold=0 
-									AND awo_not_show=0 ".$where." 
-								ORDER BY  `goods` ASC  
-								LIMIT ".$limit_start." , ".$awo_catalog_goods_per_page."";
-
-			// Получаем данные по товарам
-			$awo_goods = $wpdb->get_results($awo_goods_sql);	
-
-			// Получаем данные по количеству товаров
-			$awo_goods_count = $wpdb->get_results("SELECT COUNT(*) AS goods_count 
-													FROM `".$this->tbl_awo_goods."` 
-													WHERE deleted=0 
-														AND not_sold=0 
-														AND awo_not_show=0 ".$where."");
-			$goods_count = $awo_goods_count['0']->goods_count;			
-			
-			$html_catalog = '';
-			
-			// Для вывода системных сообщений
-			$html_catalog .= '<div class="awo_show_message" style="border-radius: 5px;
-								border: 1px double black;
-								position: fixed;
-								z-index: 1000;
-								max-width: 90%;
-								max-height: 70%;
-								min-width: 90%;
-								min-height: 70%;
-								overflow: auto;
-								top: 15%;
-								left: 5%;
-								padding: 20px 20px 20px 20px;
-								background-color: white;
-								display:none;"></div>';
-			
-			// Вычисляем максимальное количество страниц
-			$total_pages = ceil($goods_count/$awo_catalog_goods_per_page);
-			
-			// Выводить поле поиска по товарам
-			if($catalog_show_search != 0)
+			// Если указана категория товара
+			if(isset($id_goods_category))
 			{
-				include_once('html/html_catalog_search.php');
+								
+				// Вычисляем номер первого товара
+				$paged = $_GET['paged'];
+				
+				$limit_start = 0;
+				
+				// Если номер страницы больше 0 и нет критерий поиска
+				if($paged > 0 AND $_POST['awo_search'] != true)
+				{
+					$limit_start = ($paged - 1) * $awo_catalog_goods_per_page;
+				}
+				
+				// Получаем данные по Категории товара
+				$awo_goods_category = $wpdb->get_results("SELECT * 
+														FROM `".$this->tbl_awo_goods_category."` 
+														WHERE deleted=0 
+														AND id_goods_category=".$id_goods_category."
+														LIMIT 1
+														");
+				
+				
+				$awo_goods_sql = "	SELECT * 
+									FROM `".$this->tbl_awo_goods."` 
+									WHERE deleted=0 
+										AND not_sold=0 
+										AND id_goods_category=".$id_goods_category."
+										AND awo_not_show=0 ".$where." 
+									ORDER BY  `goods` ASC  
+									LIMIT ".$limit_start." , ".$awo_catalog_goods_per_page."";
+
+				// Получаем данные по товарам
+				$awo_goods = $wpdb->get_results($awo_goods_sql);	
+
+				// Получаем данные по количеству товаров
+				$awo_goods_count = $wpdb->get_results("SELECT COUNT(*) AS goods_count 
+														FROM `".$this->tbl_awo_goods."` 
+														WHERE deleted=0 
+															AND not_sold=0 
+															AND id_goods_category=".$id_goods_category."
+															AND awo_not_show=0 ".$where."");
+															
+				$goods_count = $awo_goods_count['0']->goods_count;			
+				
+				$html_catalog = '';
+				
+				// Для вывода системных сообщений
+				$html_catalog .= '<div class="awo_show_message" style="border-radius: 5px;
+									border: 1px double black;
+									position: fixed;
+									z-index: 1000;
+									max-width: 90%;
+									max-height: 70%;
+									min-width: 90%;
+									min-height: 70%;
+									overflow: auto;
+									top: 15%;
+									left: 5%;
+									padding: 20px 20px 20px 20px;
+									background-color: white;
+									display:none;"></div>';
+				
+				// Вычисляем максимальное количество страниц
+				$total_pages = ceil($goods_count/$awo_catalog_goods_per_page);
+				
+				// Выводить поле поиска по товарам
+				if($catalog_show_search != 0)
+				{
+					include_once('html/html_catalog_search.php');
+				}
+				
+
+				// Подключаем страницу с настроками Формы подписки
+				include_once('html/html_catalog_category.php');					
+
+				
+				// Получаем код пагинации для страницы
+				$paginate_links = $this->get_paginate_links($total_pages);
+				
+				$html_catalog .= '<div>'.$paginate_links.'</div>';
+				
+				
+				return $html_catalog;
+				
+			}
+			else
+			{
+							
+				$html_catalog = '';
+				
+				// Для вывода системных сообщений
+				$html_catalog .= '<div class="awo_show_message" style="border-radius: 5px;
+									border: 1px double black;
+									position: fixed;
+									z-index: 1000;
+									max-width: 90%;
+									max-height: 70%;
+									min-width: 90%;
+									min-height: 70%;
+									overflow: auto;
+									top: 15%;
+									left: 5%;
+									padding: 20px 20px 20px 20px;
+									background-color: white;
+									display:none;"></div>';
+					
+				// Выводить поле поиска по товарам
+				if($catalog_show_search != 0)
+				{
+					include_once('html/html_catalog_search.php');
+				}
+
+				// Подключаем страницу с настроками Формы подписки
+				include_once('html/html_catalog.php');				
+
+				return $html_catalog;
 			}
 			
-
-			// Подключаем страницу с настроками Формы подписки
-			include_once('html/html_catalog.php');					
-
 			
-			// Получаем код пагинации для страницы
-			$paginate_links = $this->get_paginate_links($total_pages);
-			
-			$html_catalog .= '<div>'.$paginate_links.'</div>';
-			
-			return $html_catalog;
 		}
 		
 		/**
@@ -1315,7 +1599,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 				$cart_info_shot .= '</a>';
 			}
 			
-			$cart_info_shot .= '<br />На сумму: '.number_format($cart_sum, 2, '.', ' ').' RUB</p>';
+			$cart_info_shot .= '<br />На сумму: '.number_format($cart_sum, 2, '.', ' ').' '.$this->get_currency_str().'</p>';
 								
 			
 			// Получаем данные по настройкам плагина
@@ -1670,6 +1954,33 @@ if (!class_exists('AutowebofficeInternetShop'))
 				dbDelta($sql_tbl_awo_goods);
 			}
 			
+			
+			## Структура нашей таблицы для хранения информации о категориях товаров магазина
+			$sql_tbl_awo_goods_category = "
+					CREATE TABLE `".$this->tbl_awo_goods_category."` (
+							`id_goods_category` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Код категории товара',
+							`goods_category` varchar(255) NOT NULL COMMENT 'Категория товара',
+							`brief_description` text NOT NULL COMMENT 'Краткое описание',
+							`id_goods_category_parent` int(11) NOT NULL DEFAULT '0' COMMENT 'Код категории родителя',
+							`id_employee_created` int(11) NOT NULL COMMENT 'Код сотрудника, создавшего расход',
+							`id_employee_deleted` int(11) NOT NULL COMMENT 'Код сотрудника, удалившего расход',
+							`deleted` tinyint(4) NOT NULL COMMENT 'Признак удаления',
+							`deleted_date` datetime NOT NULL COMMENT 'Дата удаления',
+							`creation_date` datetime NOT NULL COMMENT 'Дата создания',
+						  PRIMARY KEY (`id_goods_category`),
+						  KEY `id_goods_category_parent` (`id_goods_category_parent`)
+					)".$charset_collate." AUTO_INCREMENT=1;"; 
+				
+			## Проверка на существование таблицы Категории товаров
+			if($wpdb->get_var("SHOW TEBLES LIKE `".$this->tbl_awo_goods_category."`") != $this->tbl_awo_goods_category)
+			{
+				// Анализирует текущую структуру таблицы, сравнивает ee с желаемой структурой таблицы, и либо добавляет или изменяет таблицу по мере необходимости
+				dbDelta($sql_tbl_awo_goods_category);
+			}
+			
+			
+			
+			
 			## Структура нашей таблицы для хранения настроек плагина
 			$sql_tbl_awo_settings = "
 					CREATE TABLE `".$this->tbl_awo_settings."` (
@@ -1679,6 +1990,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 						`subscribe_form_settings` text NOT NULL COMMENT 'Настройки по умолчанию для формы подписки',
 						`cart_settings` text NOT NULL COMMENT 'Настройки корзины заказа',
 						`catalog_settings` text NOT NULL COMMENT 'Настройки отображения каталога товаров',
+						`id_currency` int(11) DEFAULT '0' COMMENT 'Код валюты магазина',
 						PRIMARY KEY (`id_settings`)
 					)".$charset_collate." AUTO_INCREMENT=2;"; 
 				
@@ -1728,6 +2040,27 @@ if (!class_exists('AutowebofficeInternetShop'))
 			// Удаляем таблицы Настройки
 			$wpdb->query("DROP TABLE IF EXISTS `".$this->tbl_awo_settings."`");
 		}
+		
+		/**
+		 * Получаем валюту магазина в виде строки
+		 */
+		public function get_currency_str()
+		{
+			$awo_settings = $this->admin_get_settings();
+			$curr = array('987' => 'RUB', '840'=>'USD');
+			return $curr[$awo_settings->id_currency];
+		}
+		
+		
+		public function get_url($key, $value)
+		{
+			$_GET[$key] = $value;
+			
+			$url = http_build_query($_GET);
+			
+			return '/?'.$url;
+		}
+		
 	}
 }
  

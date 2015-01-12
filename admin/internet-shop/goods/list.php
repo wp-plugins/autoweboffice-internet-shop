@@ -16,6 +16,7 @@
 		<thead>
 	    <tr class="table-header">
 			<th>Товар</th>
+			<th>Страница описания</th>
 			<th>Шоткод «Добавить в корзину»</th>
 			<th>Шоткод «Заказать прямо сейчас»</th>
 			<th>Цена</th>
@@ -37,6 +38,10 @@
 			<td>  
 				<div><b><a style="text-decoration: none;" href="admin.php?page=awo-internet-shop&tab=goods&action=update&id=<?php echo $goods->id_goods; ?>" 
 				title="Редактировать товар: <?php echo $goods->goods;?>"><?php echo $goods->goods;?></b></a></div>
+			</td>
+			
+			<td>  
+				<div><a href="<?php echo $goods->url_page;?>" target="_blank"><?php echo $goods->url_page;?></a></div>
 			</td>
 			 
 			<td>  
