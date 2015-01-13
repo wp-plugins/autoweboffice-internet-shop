@@ -1967,7 +1967,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 						  `goods_size_name` varchar(255) NOT NULL COMMENT 'Название свойства Размер',
 						  `goods_color_used` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Использовать свойство Цвет',
 						  `goods_size_used` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Использовать свойство Размер',
-						PRIMARY KEY (`id_goods`),
+						PRIMARY KEY  (`id_goods`),
 						KEY `goods` (`goods`),
 						KEY `id_supplier` (`id_supplier`),
 						KEY `id_manufacturer` (`id_manufacturer`),
@@ -1995,7 +1995,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 							`deleted` tinyint(4) NOT NULL COMMENT 'Признак удаления',
 							`deleted_date` datetime NOT NULL COMMENT 'Дата удаления',
 							`creation_date` datetime NOT NULL COMMENT 'Дата создания',
-						  PRIMARY KEY (`id_goods_category`),
+						  PRIMARY KEY  (`id_goods_category`),
 						  KEY `id_goods_category_parent` (`id_goods_category_parent`)
 					)".$charset_collate." AUTO_INCREMENT=1;"; 
 				
@@ -2006,9 +2006,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 				dbDelta($sql_tbl_awo_goods_category);
 			}
 			
-			
-			
-			
+
 			## Структура нашей таблицы для хранения настроек плагина
 			$sql_tbl_awo_settings = "
 					CREATE TABLE `".$this->tbl_awo_settings."` (
@@ -2019,7 +2017,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 						`cart_settings` text NOT NULL COMMENT 'Настройки корзины заказа',
 						`catalog_settings` text NOT NULL COMMENT 'Настройки отображения каталога товаров',
 						`id_currency` int(11) DEFAULT '0' COMMENT 'Код валюты магазина',
-						PRIMARY KEY (`id_settings`)
+						PRIMARY KEY  (`id_settings`)
 					)".$charset_collate." AUTO_INCREMENT=2;"; 
 				
 			## Проверка на существование таблицы Настройки	
@@ -2064,6 +2062,9 @@ if (!class_exists('AutowebofficeInternetShop'))
 
 			// Удаляем таблицы Товары
 			$wpdb->query("DROP TABLE IF EXISTS `".$this->tbl_awo_goods."`");
+			
+			// Удаляем таблицы Категорий товара
+			$wpdb->query("DROP TABLE IF EXISTS `".$this->tbl_awo_goods_category."`");
 			
 			// Удаляем таблицы Настройки
 			$wpdb->query("DROP TABLE IF EXISTS `".$this->tbl_awo_settings."`");
