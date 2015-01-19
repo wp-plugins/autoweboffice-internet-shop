@@ -1,5 +1,10 @@
 jQuery(document).ready(function($) {
 
+		$("body").on('click', '.exit_shopping_cart', function() {
+			$(".awo_show_message").hide();
+			$(".awo_show_cart_message").hide();
+		});
+
 		// Наполнение корзины товарами
 		$(".awo_add_to_cart").click(function() {
 			

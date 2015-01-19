@@ -1,10 +1,13 @@
 <?php
+echo "<div class='exit_shopping_cart' style='width: 24px; height: 24px; cursor: pointer; float: right; background: url(".plugin_dir_url( dirname( __FILE__ ) )."/img/ico/exit.png); '></div>";
+echo '<div style="clear: both;"></div>';
+
 // Если существует массив с данными по корзине заказа
 if(isset($_SESSION['awo_shopping_cart']))
 {			
 	$html_form_goods = '';
 	
-	$html_form_goods .= '<table>';
+	$html_form_goods .= '<table width="100%">';
 	
 	$html_form_goods .= '<tr><th colspan="2">Товар</th><th>Цена</th><th>Кол-во</th><th>Стоимость</th><th>&nbsp;</th></tr>';
 	
@@ -52,9 +55,9 @@ if(isset($_SESSION['awo_shopping_cart']))
 		$html_form_goods .= '<tr>';
 		$html_form_goods .= '<td style="vertical-align: middle;"><b><img style="vertical-align: top; width: 150px;" style="vertical-align: top;" src="'.$image_url.'" alt="'.$goods_name.'" title="'.$goods_name.'"></td>';
 		$html_form_goods .= '<td style="vertical-align: middle;"><b>'.$goods_name.'</b><br /><br />'.$awo_goods->brief_description.'</td>';
-		$html_form_goods .= '<td style="vertical-align: middle;">'.number_format($awo_goods->price, 2, '.', ' ').'&nbsp;'.$this->get_currency_str().'</td>';
+		$html_form_goods .= '<td style="vertical-align: middle;">'.str_replace(' ', '&nbsp;', number_format($awo_goods->price, 2, '.', ' ') ).'&nbsp;'.$this->get_currency_str().'</td>';
 		$html_form_goods .= '<td style="vertical-align: middle;">'.$quantity.'</td>';
-		$html_form_goods .= '<td style="vertical-align: middle;">'.number_format($goods_sum, 2, '.', ' ').'&nbsp;'.$this->get_currency_str().'</td>';
+		$html_form_goods .= '<td style="vertical-align: middle;">'.str_replace(' ', '&nbsp;', number_format($goods_sum, 2, '.', ' ')).'&nbsp;'.$this->get_currency_str().'</td>';
 		$html_form_goods .= '<td style="vertical-align: middle;"><a class="awo_delete_from_cart" id="'.$id_goods.'" href="#">X</a></td>';
 		$html_form_goods .= '</tr>';
 		
@@ -63,7 +66,7 @@ if(isset($_SESSION['awo_shopping_cart']))
 	
 	if($cart_quantity > 0)
 	{
-		$html_form_goods .= '<tr><td colspan="3"></td><td><b>Всего к оплате:</b></td><td><b>'.number_format($cart_sum, 2, '.', ' ').'&nbsp;'.$this->get_currency_str().'</b></td><td></td></tr>';
+		$html_form_goods .= '<tr><td colspan="3"></td><td><b>Всего к оплате:</b></td><td><b>'.str_replace(' ', '&nbsp;', number_format($cart_sum, 2, '.', ' ')).'&nbsp;'.$this->get_currency_str().'</b></td><td></td></tr>';
 	}
 	else
 	{
