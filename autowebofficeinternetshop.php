@@ -4,7 +4,7 @@
  * Plugin Name: AutoWebOffice Internet Shop
  * Plugin URI: http://wordpress.org/plugins/autoweboffice-internet-shop/
  * Description: Создание интернет магазина на базе платформы WordPress интегрированного с сервисом АвтоОфис
- * Version: 0.16
+ * Version: 0.17
  * Author: Alexander Kruglov (zakaz@autoweboffice.com)
  * Author URI: http://autoweboffice.com/
  */
@@ -397,7 +397,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 		 */
 		public function admin_internet_shop()
 		{
-			global $wpdb;
+            global $wpdb;
 			
 			// Задаем значение полей по умолчанию
 			$awo_goods_update_date = '0000-00-00 00:00:00'; // Дата последноне обновления товаров
@@ -486,9 +486,9 @@ if (!class_exists('AutowebofficeInternetShop'))
 		 * Функция для обновления информации о товарах
 		 */
 		private function admin_update_goods()
-		{	
-			global $wpdb;
-			
+		{   
+            global $wpdb;
+            
 			// Получаем данные по настройкам плагина
 			$awo_settings = $this->admin_get_settings();
 			
@@ -501,6 +501,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 			// Если подключена библиотека cURL
 			if($curl = curl_init()) 
 			{
+                
 				// Массив с GET параметрами запроса
 				$array_query = array(
 								// API KEY
@@ -519,16 +520,9 @@ if (!class_exists('AutowebofficeInternetShop'))
 				);
 				 
 				$awo_storesId = trim($awo_storesId);
-
-				curl_setopt($curl, CURLOPT_URL, 'https://'.$awo_storesId.'.autokassir.ru/?r=api/rest/goods&'.http_build_query($array_query));
-				curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-				curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-				curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-				
-				$out_json = curl_exec($curl);
-				
-				curl_close($curl);
-				
+                
+                $out_json = file_get_contents('https://'.$awo_storesId.'.autokassir.ru/?r=api/rest/goods&'.http_build_query($array_query));
+                
 				// Декодирует JSON строку в объект с данными
 				$out_obj = json_decode($out_json);
 				
