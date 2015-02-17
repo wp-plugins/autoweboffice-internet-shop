@@ -1,14 +1,15 @@
-<?php
+<?php  
 /*
  * Файл отвечающий за запуск плагина
  * Plugin Name: AutoWebOffice Internet Shop
  * Plugin URI: http://wordpress.org/plugins/autoweboffice-internet-shop/
  * Description: Создание интернет магазина на базе платформы WordPress интегрированного с сервисом АвтоОфис
- * Version: 0.17
+ * Version: 0.18
  * Author: Alexander Kruglov (zakaz@autoweboffice.com)
  * Author URI: http://autoweboffice.com/
  */
- 
+                    
+
 // Если не существует папки с плагином, то прекращаем работу
 if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) 
 { 
@@ -43,6 +44,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 			$this->tbl_awo_goods   		= $wpdb->prefix.'awo_goods'; // Товары
 			$this->tbl_awo_settings   	= $wpdb->prefix.'awo_settings'; // Настройки
 			$this->tbl_awo_goods_category = $wpdb->prefix.'awo_goods_category'; // Категории товаров
+
 			
 			## Функция которая исполняется при активации плагина
 			register_activation_hook($this->plugin_name, array(&$this, 'activate'));
@@ -487,6 +489,9 @@ if (!class_exists('AutowebofficeInternetShop'))
 		 */
 		private function admin_update_goods()
 		{   
+            // Обновляем категории
+            $this->admin_update_goods_category();
+            
             global $wpdb;
             
 			// Получаем данные по настройкам плагина
@@ -671,6 +676,9 @@ if (!class_exists('AutowebofficeInternetShop'))
 		private function admin_update_goods_category()
 		{	
 			global $wpdb;
+            
+            // Очищаем от старой информации
+            $wpdb->query('TRUNCATE TABLE '.$this->tbl_awo_goods_category);
 			
 			// Получаем данные по настройкам плагина
 			$awo_settings = $this->admin_get_settings();
