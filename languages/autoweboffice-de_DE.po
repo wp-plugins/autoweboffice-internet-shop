@@ -1,0 +1,48 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: autoweboffice\n"
+"POT-Creation-Date: 2015-03-25 13:44+0200\n"
+"PO-Revision-Date: 2015-03-25 13:45+0200\n"
+"Last-Translator: Artem Davletyants <info@setwork.ru>\n"
+"Language-Team: Artem Davletyants <zakaz@autoweboffice.ru>\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.5\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __\n"
+
+#: c:\work\web\nesterenko\multilang/html_subscribe_form.php:28
+msgid "surname"
+msgstr "Name"
+
+#: c:\work\web\nesterenko\multilang/html_subscribe_form.php:38
+msgid "name"
+msgstr "Vorname"
+
+#: c:\work\web\nesterenko\multilang/html_subscribe_form.php:48
+msgid "lastname"
+msgstr "Vatersname"
+
+#: c:\work\web\nesterenko\multilang/html_subscribe_form.php:57
+msgid "email"
+msgstr "E-mail"
+
+#: c:\work\web\nesterenko\multilang/html_subscribe_form.php:66
+msgid "phone"
+msgstr "Telefon"
+
+#: c:\work\web\nesterenko\multilang/html_subscribe_form.php:67
+msgid "phone_error"
+msgstr "Nur Zahlen, keine Leerzeichen!"
+
+#: c:\work\web\nesterenko\multilang/html_subscribe_form.php:72
+msgid "confident"
+msgstr "100% Datenschutz"
+
+#: c:\work\web\nesterenko\multilang/html_subscribe_form.php:75
+msgid "submit"
+msgstr "Anmeldung"

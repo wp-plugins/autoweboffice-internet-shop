@@ -86,7 +86,7 @@ include_once('navigation.php');
 			</td>
 		</tr>
 		
-		<tr valign="top">
+	   <!--	<tr valign="top">
 			<th scope="row"><label for="awo_policy_of_confidentiality">Политика конфиденциальности:</label></th>
 			<td>
 			<textarea name="awo_policy_of_confidentiality" id="awo_policy_of_confidentiality" class="regular-text" rows="3"><?php echo $awo_policy_of_confidentiality; ?></textarea>
@@ -97,7 +97,7 @@ include_once('navigation.php');
 			<th scope="row"><label for="awo_subscribe_form_submit_value">Надпись на кнопке:</label></th>
 			<td><input name="awo_subscribe_form_submit_value" type="text" id="awo_subscribe_form_submit_value" 
 			value="<?php echo $awo_subscribe_form_submit_value; ?>" class="regular-text"></td>
-		</tr>
+		</tr>    -->
 		
 	</tbody>
 </table>

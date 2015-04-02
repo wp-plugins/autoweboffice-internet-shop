@@ -25,7 +25,7 @@ if($last_name)
 {
 	$html_subscribe_form .= ' 
 	<div>
-		<label>Фамилия <span class="required">*</span></label>    
+		<label>'.__( 'surname', 'autoweboffice').' <span class="required">*</span></label>
 		<br />			
 		<input class="widefat" maxlength="255" name="Contact[last_name]" id="last_name" type="text">     	   
 	</div>';
@@ -35,7 +35,7 @@ if($name)
 {
 	$html_subscribe_form .= '
 	<div>
-		<label>Имя <span class="required">*</span></label> 
+		<label>'.__( 'name', 'autoweboffice').' <span class="required">*</span></label>
 		<br />   	
 		<input maxlength="255" name="Contact[name]" type="text">     	  
 	</div>';
@@ -45,7 +45,7 @@ if($middle_name)
 {
 	$html_subscribe_form .= '
 	<div>
-		<label>Отчество <span class="required">*</span></label> 
+		<label>'.__( 'lastname', 'autoweboffice').' <span class="required">*</span></label>
 		<br />   	
 		<input maxlength="255" name="Contact[middle_name]" type="text">     	   
 	</div>';
@@ -54,7 +54,7 @@ if($middle_name)
 if($email)
 {
 	$html_subscribe_form .= '<div>
-		<label>E-mail <span class="required">*</span></label> 
+		<label>'.__( 'email', 'autoweboffice' ).' <span class="required">*</span></label>
 		<br />   	
 		<input maxlength="255" name="Contact[email]" type="text">     	    
 	</div>';
@@ -63,16 +63,16 @@ if($email)
 if($phone_number)
 {
 	$html_subscribe_form .= '<div>
-		<label>Телефон <span class="required">*</span></label>
-		<div style="font-size: 90%;"><i>Только цифры, без пробелов!</i></div>  	
+		<label>'.__( 'phone', 'autoweboffice' ).' <span class="required">*</span></label>
+		<div style="font-size: 90%;"><i>'.__( 'phone_error', 'autoweboffice' ).'</i></div>  	
 		<input maxlength="255" name="Contact[phone_number]" type="text">     	 
 	</div>';
 }
 
-$html_subscribe_form .= '<div>'.$policy_of_confidentiality.'</div>';
+$html_subscribe_form .= '<div>'.__( 'confident', 'autoweboffice' ).'</div>';
 
 $html_subscribe_form .= '<div>
-	<input type="submit" value="'.$subscribe_form_submit_value.'">
+	<input type="submit" value="'.__( 'submit', 'autoweboffice' ).'">
 </div>';
 
 $html_subscribe_form .= '</form>';

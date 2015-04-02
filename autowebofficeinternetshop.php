@@ -1,10 +1,10 @@
-<?php  
+<?php
 /*
  * Файл отвечающий за запуск плагина
  * Plugin Name: AutoWebOffice Internet Shop
  * Plugin URI: http://wordpress.org/plugins/autoweboffice-internet-shop/
  * Description: Создание интернет магазина на базе платформы WordPress интегрированного с сервисом АвтоОфис
- * Version: 0.18
+ * Version: 0.19
  * Author: Alexander Kruglov (zakaz@autoweboffice.com)
  * Author URI: http://autoweboffice.com/
  */
@@ -75,12 +75,12 @@ if (!class_exists('AutowebofficeInternetShop'))
 			add_action("wp_ajax_nopriv_ajax_delete_from_cart", array(&$this, "ajax_delete_from_cart"));
 			
 			add_action('init', array(&$this, "awo_session_start")); // Включаем возможность использования Сессий
-			
+
 			// Подключаем необходимые виджеты
 			// add_action('widgets_init', array($this, 'include_widgets'));
 			
 			// Если мы в адм. интерфейсе
-			if (is_admin()) 
+			if (is_admin())
 			{
 				// Добавляем стили и скрипты
 				add_action('wp_print_scripts', array(&$this, 'admin_load_scripts'));
@@ -122,12 +122,14 @@ if (!class_exists('AutowebofficeInternetShop'))
 		/**
 		 * Функция включение Сессий
 		 */
-		function awo_session_start() 
+		function awo_session_start()
 		{ 
 			if(!session_id()) 
 			{ 
 				session_start(); // если сессия еще не существует, то начинаем её
 			}
+
+                        load_plugin_textdomain( 'autoweboffice', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 		}
 		
 		/**
@@ -422,7 +424,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 						//var_dump($this->admin_update_goods_category()); exit();
 						
 						// Обновляем информацию по настройкам магазина
-						//var_dump($this->admin_update_settings()); exit();
+						// var_dump($this->admin_update_settings()); exit();
 						$result_update_settings = $this->admin_update_settings();
 						
 						
@@ -504,7 +506,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 			$awo_api_key_get = $api_settings['api_key_get'];
 			
 			// Если подключена библиотека cURL
-			if($curl = curl_init()) 
+			if($curl = curl_init())
 			{
                 
 				// Массив с GET параметрами запроса
@@ -690,7 +692,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 			$awo_api_key_get = $api_settings['api_key_get'];
 			
 			// Если подключена библиотека cURL
-			if($curl = curl_init()) 
+			if($curl = curl_init())
 			{
 				// Массив с GET параметрами запроса
 				$array_query = array(
@@ -817,16 +819,16 @@ if (!class_exists('AutowebofficeInternetShop'))
 
 			$awo_storesId = $api_settings['storesId'];
 			$awo_api_key_get = $api_settings['api_key_get'];
+			$id_stores = $api_settings['id_stores'];
 			
 			// Если подключена библиотека cURL
-			if($curl = curl_init()) 
+			if($curl = curl_init())
 			{
 				// Массив с GET параметрами запроса
 				$array_query = array(
 								// API KEY
 								'key' =>$awo_api_key_get,
-				
-							
+								'id' =>$id_stores,	
 				);
 				 
 				$awo_storesId = trim($awo_storesId);
@@ -840,22 +842,21 @@ if (!class_exists('AutowebofficeInternetShop'))
 				
 				curl_close($curl);
 				
-				
 				// Декодирует JSON строку в объект с данными
 				$out_obj = json_decode($out_json);
-				
+
 				// Если не получили объект с данными, то выводим сообщение об ошибке
-				if(!is_array($out_obj))
+				if(!is_object($out_obj))
 				{
 					return false;
 				}
-				
 
 				// Составляем массив для обновления данных
 				$updateData = array(
-							'id_currency' => $out_obj[0]->id_currency,			
+							'id_currency' => $out_obj->id_currency,			
 				);
 							
+				
 				// Сохраняем в настройках плагина
 				$wpdb->update($this->tbl_awo_settings, $updateData, array('id_settings' => 1));
 							
@@ -1903,7 +1904,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 		/**
 		 * Активация плагина
 		 */
-		function activate() 
+		function activate()
 		{
 			// Отвечает за запросы к базе данных
 			global $wpdb;
@@ -2078,7 +2079,12 @@ if (!class_exists('AutowebofficeInternetShop'))
 		public function get_currency_str()
 		{
 			$awo_settings = $this->admin_get_settings();
-			$curr = array('987' => 'RUB', '840'=>'USD');
+			$curr = array('974' => 'BYR', 
+						  '978'=>'EUR', 
+						  '398'=>'KZT',
+						  '987'=>'RUB',
+						  '980'=>'UAH',
+						  '840'=>'USD');
 			return $curr[$awo_settings->id_currency];
 		}
 		
