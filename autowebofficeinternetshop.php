@@ -4,7 +4,7 @@
  * Plugin Name: AutoWebOffice Internet Shop
  * Plugin URI: http://wordpress.org/plugins/autoweboffice-internet-shop/
  * Description: Создание интернет магазина на базе платформы WordPress интегрированного с сервисом АвтоОфис
- * Version: 0.19
+ * Version: 0.20
  * Author: Alexander Kruglov (zakaz@autoweboffice.com)
  * Author URI: http://autoweboffice.com/
  */
@@ -124,12 +124,32 @@ if (!class_exists('AutowebofficeInternetShop'))
 		 */
 		function awo_session_start()
 		{ 
-			if(!session_id()) 
-			{ 
-				session_start(); // если сессия еще не существует, то начинаем её
+			/*
+			if (isset($_COOKIE['PHPSESSID'])) 
+			{
+				$sessid = $_COOKIE['PHPSESSID'];
+			} 
+			else if (isset($_GET['PHPSESSID'])) 
+			{
+				$sessid = $_GET['PHPSESSID'];
+			} 
+			else 
+			{
+				session_start();
+				return false;
 			}
+        
+			if (!preg_match('/^[a-z0-9]{32}$/', $sessid)) 
+			{
+				return false;
+			}
+			*/
+			
+			session_start();
 
-                        load_plugin_textdomain( 'autoweboffice', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+			load_plugin_textdomain( 'autoweboffice', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+			
+			return true;
 		}
 		
 		/**
@@ -1033,7 +1053,6 @@ if (!class_exists('AutowebofficeInternetShop'))
 			
 			// !Важно не забыть убить функцию.
 			die();
-
 		}
 		
 		/**
@@ -1618,17 +1637,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 			$cart_info_shot .= '<div class="awo_cart" style="">';
 			$cart_info_shot .= '<p>Товаров: ';
 			
-			if($cart_quantity > 0 and false)
-			{
-				$cart_info_shot .= '<a class="awo_show_cart" href="#">';
-			}
-			
 			$cart_info_shot .= $cart_quantity.' шт.';
-			
-			if($cart_quantity > 0 and false)
-			{
-				$cart_info_shot .= '</a>';
-			}
 			
 			$cart_info_shot .= '<br />На сумму: '.number_format($cart_sum, 2, '.', ' ').' '.$this->get_currency_str().'</p>';
 								
@@ -1650,7 +1659,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 			// Если в корзине есть товары
 			if($cart_quantity > 0)
 			{	
-					
+				
 				// Если в сессии хранятся данные по UTM-меткам
 				if(isset($_SESSION['awo_utm']))
 				{
@@ -1685,7 +1694,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 					$awo_cart_settings_submit_value = 'Оформить заказ';
 				}
 				
-				$cart_info_shot .= '<input type="submit" value="'.$awo_cart_settings_submit_value.'" >';
+				$cart_info_shot .= '<input type="submit" style="margin-top: 10px;" value="'.$awo_cart_settings_submit_value.'" >';
 				
 				$cart_info_shot .= '</form>';
 			}
