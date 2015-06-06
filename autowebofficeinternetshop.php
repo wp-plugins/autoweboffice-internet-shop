@@ -4,7 +4,7 @@
  * Plugin Name: AutoWebOffice Internet Shop
  * Plugin URI: http://wordpress.org/plugins/autoweboffice-internet-shop/
  * Description: Создание интернет магазина на базе платформы WordPress интегрированного с сервисом АвтоОфис
- * Version: 0.20
+ * Version: 0.21
  * Author: Alexander Kruglov (zakaz@autoweboffice.com)
  * Author URI: http://autoweboffice.com/
  */
@@ -548,7 +548,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 				 
 				$awo_storesId = trim($awo_storesId);
                 
-                $out_json = file_get_contents('https://'.$awo_storesId.'.autokassir.ru/?r=api/rest/goods&'.http_build_query($array_query));
+                $out_json = file_get_contents('https://'.$awo_storesId.'.autoweboffice.ru/?r=api/rest/goods&'.http_build_query($array_query));
                 
 				// Декодирует JSON строку в объект с данными
 				$out_obj = json_decode($out_json);
@@ -733,7 +733,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 				 
 				$awo_storesId = trim($awo_storesId);
 
-				curl_setopt($curl, CURLOPT_URL, 'https://'.$awo_storesId.'.autokassir.ru/?r=api/rest/goodscategory&'.http_build_query($array_query));
+				curl_setopt($curl, CURLOPT_URL, 'https://'.$awo_storesId.'.autoweboffice.ru/?r=api/rest/goodscategory&'.http_build_query($array_query));
 				curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
 				curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 				curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
@@ -853,7 +853,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 				 
 				$awo_storesId = trim($awo_storesId);
 
-				curl_setopt($curl, CURLOPT_URL, 'https://'.$awo_storesId.'.autokassir.ru/?r=api/rest/mainsettings&'.http_build_query($array_query));
+				curl_setopt($curl, CURLOPT_URL, 'https://'.$awo_storesId.'.autoweboffice.ru/?r=api/rest/mainsettings&'.http_build_query($array_query));
 				curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
 				curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 				curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
@@ -1576,7 +1576,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 				$utm = $_SESSION['awo_utm'];
 				
 				$link_to_order .= ' value="'.$add_to_cart_submit_value.'" 
-					onClick="location.href=\'http://'.$awo_storesId.'.autokassir.ru/?r=ordering/cart/as1&id='.$id_goods.'&clean=true&quantity='.$quantity.'&lg=ru&utm_source='.$utm['utm_source']
+					onClick="location.href=\'http://'.$awo_storesId.'.autoweboffice.ru/?r=ordering/cart/as1&id='.$id_goods.'&clean=true&quantity='.$quantity.'&lg=ru&utm_source='.$utm['utm_source']
 																																								.'&utm_campaign='.$utm['utm_campaign']
 																																								.'&utm_term='.$utm['utm_term']
 																																								.'&utm_content='.$utm['utm_content']
@@ -1586,7 +1586,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 			else
 			{
 				$link_to_order .= ' value="'.$add_to_cart_submit_value.'" 
-					onClick="location.href=\'http://'.$awo_storesId.'.autokassir.ru/?r=ordering/cart/as1&id='.$id_goods.'&clean=true&quantity='.$quantity.'&lg=ru\'">';
+					onClick="location.href=\'http://'.$awo_storesId.'.autoweboffice.ru/?r=ordering/cart/as1&id='.$id_goods.'&clean=true&quantity='.$quantity.'&lg=ru\'">';
 			}
 			
 			return $link_to_order;
@@ -1667,7 +1667,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 					$utm = $_SESSION['awo_utm'];
 				
 					// Составляем форму для отправки запроса в АвтоОфис
-					$cart_info_shot .= '<form class="awo_checkout" action="https://'.$awo_storesId.'.autokassir.ru/?r=ordering/cart/s1&clean=true&utm_source='.$utm['utm_source']
+					$cart_info_shot .= '<form class="awo_checkout" action="https://'.$awo_storesId.'.autoweboffice.ru/?r=ordering/cart/s1&clean=true&utm_source='.$utm['utm_source']
 																																			   .'&utm_campaign='.$utm['utm_campaign']
 																																			   .'&utm_term='.$utm['utm_term']
 																																			   .'&utm_content='.$utm['utm_content']
@@ -1676,7 +1676,7 @@ if (!class_exists('AutowebofficeInternetShop'))
 				else
 				{
 					// Составляем форму для отправки запроса в АвтоОфис
-					$cart_info_shot .= '<form class="awo_checkout" action="https://'.$awo_storesId.'.autokassir.ru/?r=ordering/cart/s1&clean=true" method="post" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">';
+					$cart_info_shot .= '<form class="awo_checkout" action="https://'.$awo_storesId.'.autoweboffice.ru/?r=ordering/cart/s1&clean=true" method="post" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">';
 
 				}
 				

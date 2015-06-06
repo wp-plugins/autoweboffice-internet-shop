@@ -23,7 +23,7 @@
 		
 		<tr valign="top">
 			<th scope="row"><label for="awo_not_show">Страница редактирования в АвтоОфис:</label></th>
-			<td><a href="<?php echo 'https://'.$awo_storesId.'.autokassir.ru/?r=shop/goods/admin/update&id='.$awo_goods->id_goods.'&lg=ru';?>" target="_blank"><?php echo 'https://'.$awo_storesId.'.autokassir.ru/?r=shop/goods/admin/update&id='.$awo_goods->id_goods.'&lg=ru'?></a></td>
+			<td><a href="<?php echo 'https://'.$awo_storesId.'.autoweboffice.ru/?r=shop/goods/admin/update&id='.$awo_goods->id_goods.'&lg=ru';?>" target="_blank"><?php echo 'https://'.$awo_storesId.'.autoweboffice.ru/?r=shop/goods/admin/update&id='.$awo_goods->id_goods.'&lg=ru'?></a></td>
 			</td>
 		</tr>
 		

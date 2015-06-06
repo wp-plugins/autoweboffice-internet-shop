@@ -139,7 +139,7 @@
 				// Если есть данные по изображению товара
 				if(trim($image) != '')
 				{
-					$image_url = 'https://'.$awo_storesId.'.autokassir.ru/images/goods/pics/'.$image;
+					$image_url = 'https://'.$awo_storesId.'.autoweboffice.ru/images/goods/pics/'.$image;
 				}
 				else
 				{
@@ -247,7 +247,7 @@
 			// Если есть данные по изображению товара
 			if(trim($image) != '')
 			{
-				$image_url = 'https://'.$awo_storesId.'.autokassir.ru/images/goods/pics/'.$image;
+				$image_url = 'https://'.$awo_storesId.'.autoweboffice.ru/images/goods/pics/'.$image;
 			}
 			else
 			{

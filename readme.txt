@@ -68,6 +68,10 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 == Changelog ==
 
+= 0.21 =
+
+* Техническое обновление
+
 = 0.20 =
 
 * FIX: Доработан механизм работы с сессиями

@@ -45,7 +45,7 @@ if(isset($_SESSION['awo_shopping_cart']))
 		// Если есть данные по изображению товара
 		if(trim($image) != '')
 		{
-			$image_url = 'https://'.$awo_storesId.'.autokassir.ru/images/goods/pics/'.$image;
+			$image_url = 'https://'.$awo_storesId.'.autoweboffice.ru/images/goods/pics/'.$image;
 		}
 		else
 		{
@@ -96,7 +96,7 @@ if($cart_quantity > 0)
 		$utm = $_SESSION['awo_utm'];
 	
 		// Составляем форму для отправки запроса в АвтоОфис
-		$cart_info_shot .= '<form class="awo_checkout" action="https://'.$awo_storesId.'.autokassir.ru/?r=ordering/cart/s1&clean=true&utm_source='.$utm['utm_source']
+		$cart_info_shot .= '<form class="awo_checkout" action="https://'.$awo_storesId.'.autoweboffice.ru/?r=ordering/cart/s1&clean=true&utm_source='.$utm['utm_source']
 																																   .'&utm_campaign='.$utm['utm_campaign']
 																																   .'&utm_term='.$utm['utm_term']
 																																   .'&utm_content='.$utm['utm_content']
@@ -105,7 +105,7 @@ if($cart_quantity > 0)
 	else
 	{
 		// Составляем форму для отправки запроса в АвтоОфис
-		$cart_info_shot .= '<form class="awo_checkout" action="https://'.$awo_storesId.'.autokassir.ru/?r=ordering/cart/s1&clean=true" method="post" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">';
+		$cart_info_shot .= '<form class="awo_checkout" action="https://'.$awo_storesId.'.autoweboffice.ru/?r=ordering/cart/s1&clean=true" method="post" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">';
 	}
 	
 	// Добавляем данные по товарам
